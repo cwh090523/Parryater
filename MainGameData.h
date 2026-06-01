@@ -42,3 +42,12 @@ struct Player {
 
 	void PlayerUpdate();
 };
+
+struct Enemy {
+	int hp = 10;
+	float MoveSpeed;
+	Position pos;
+	Position lastMoveDir;
+	FloatPosition floatPos;
+	void EnemyUpdate();
+};
