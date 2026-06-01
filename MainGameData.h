@@ -29,14 +29,15 @@ struct Player {
 
 	int maxHp = 3;
 	int hp = 3;
-	int attackPower;
-	int attackSpeed;
+	int attackPower = 1;
+	int attackSpeed = 200;
 	float MoveSpeed = 1; // 1 = 1초마다 1칸 이동
 	int DashVelocity = 1;
 	int DashCooldown = 2000;
 	Position pos = { 0,0 };
 	Position lastMoveDir = { 0,0 };
 	FloatPosition floatPos = { 0,0 };
+	
 
 
 	void PlayerUpdate();
