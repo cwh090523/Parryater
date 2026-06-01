@@ -54,23 +54,44 @@ class Player {
 class Enemy {
 	public:
 		
-		Enemy(Position pos);
-		virtual ~Enemy();
+		Stats stats;
+		Enemy(Stats astat, Position apos) {
+			stats = astat;
+			pos = apos;
+		}
+		~Enemy();
 		int hp = 10;
 		float MoveSpeed;
 		Position pos;
 		Position moveDir;
 		FloatPosition floatPos;
-		void EnemyUpdate();
+		virtual void EnemyUpdate();
 
 };
 class Enmey1 : public Enemy
 {
 public:
-	Enmey1(Position pos);
+	Enmey1(Stats astat, Position apos);
 	~Enmey1();
 
 	void EnemyUpdate() {
 		
 	}
+};
+
+class Bullet {
+	public:
+		Bullet(Position apos, Position adir, int adamage,float amoveSpeed, ProjectileType atype) {
+			pos = apos;
+			moveDir = adir;
+			damage = adamage;
+			type = atype;
+			MoveSpeed = amoveSpeed;
+	}
+	~Bullet();
+	Position pos;
+	Position moveDir;
+	int damage;
+	float MoveSpeed;
+	ProjectileType type;
 };
