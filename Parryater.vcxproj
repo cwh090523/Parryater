@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsciiArt.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="InGameScene.cpp" />
@@ -132,10 +133,12 @@
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsciiArt.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="MainGameData.h" />
+    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
