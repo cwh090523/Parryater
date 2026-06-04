@@ -124,7 +124,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
+    <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="Parryater.cpp" />
+    <ClCompile Include="SettingScene.cpp" />
+    <ClCompile Include="ShopScene.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
