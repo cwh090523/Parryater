@@ -2,6 +2,8 @@
 #pragma once
 #include "enums.h"
 #include <Windows.h>
+#include <vector>
+using namespace std;
 struct FloatPosition {
 	float x; float y;
 
@@ -17,15 +19,7 @@ struct Position {
 	}
 };
 
-struct GameState
-{
-	Scene currentScene;
-	bool isRunning;
-	bool isGameOver;
-	bool isPaused;
-	int score;
-	ULONGLONG currentTime;
-};
+
 struct Stats
 {
 	int maxHp = 3;
@@ -58,6 +52,7 @@ class Enemy {
 		Enemy(Stats astat, Position apos) {
 			stats = astat;
 			pos = apos;
+			floatPos = { static_cast<float>(apos.x), static_cast<float>(apos.y) };
 		}
 		~Enemy();
 		int hp = 10;
@@ -65,6 +60,7 @@ class Enemy {
 		Position pos;
 		Position moveDir;
 		FloatPosition floatPos;
+		bool isAlive = true;
 		virtual void EnemyUpdate();
 
 };
@@ -81,17 +77,25 @@ public:
 
 class Bullet {
 	public:
-		Bullet(Position apos, Position adir, int adamage,float amoveSpeed, ProjectileType atype) {
+		Bullet(Position apos, Position adir, int adamage,float amoveSpeed, int alifeTime, ProjectileType atype) {
 			pos = apos;
 			moveDir = adir;
 			damage = adamage;
 			type = atype;
+			lifeTime = alifeTime;
 			MoveSpeed = amoveSpeed;
+			floatPos = { static_cast<float>(apos.x), static_cast<float>(apos.y) };
 	}
 	~Bullet();
 	Position pos;
 	Position moveDir;
-	int damage;
-	float MoveSpeed;
+	FloatPosition floatPos;
+	bool isActive = true;
+	int damage = 0;
+	float MoveSpeed = 0;
 	ProjectileType type;
+	int lifeTime = 0;
+	void ProjectileUpdate() {
+
+	}
 };
