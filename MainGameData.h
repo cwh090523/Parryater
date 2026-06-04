@@ -22,6 +22,7 @@ struct Position {
 
 struct Stats
 {
+public:
 	int maxHp = 3;
 	int hp = 3;
 	int attackPower = 1;
@@ -34,13 +35,16 @@ struct Stats
 };
 class Player {
 
+public:
 	int remingDashTime = 0;
 	int remingDashCooldown = 0;
 	int remingInvisibleTime = 0;
 	Stats stats;
+	Position prevPos = { 0,0 };
 	Position pos = { 0,0 };
+	Position moveDir = { 0,0 };
 	Position lastMoveDir = { 0,0 };
-	FloatPosition floatPos = { 0,0 };
+   FloatPosition floatPos = { 0,0 };
 	ULONGLONG lastAttackTime;
 	void PlayerUpdate();
 };
@@ -57,9 +61,11 @@ class Enemy {
 		~Enemy();
 		int hp = 10;
 		float MoveSpeed;
-		Position pos;
-		Position moveDir;
-		FloatPosition floatPos;
+		Position prevPos = { 0,0 };
+		Position pos = { 0,0 };
+		Position moveDir = { 0,0 };
+		FloatPosition floatPos = { 0,0 };
+
 		bool isAlive = true;
 		virtual void EnemyUpdate();
 
@@ -86,6 +92,7 @@ class Bullet {
 			MoveSpeed = amoveSpeed;
 			floatPos = { static_cast<float>(apos.x), static_cast<float>(apos.y) };
 	}
+public:
 	~Bullet();
 	Position pos;
 	Position moveDir;
