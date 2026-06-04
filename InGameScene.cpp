@@ -45,7 +45,7 @@ void InGameUpdate(GameState& state) {
 	}
 }
 
-void InGameRender(GameState state) {
+void InGameRender(const GameState state) {
 	
 
 	GotoXY(state.inGameData.player.prevPos.x, state.inGameData.player.prevPos.y);
