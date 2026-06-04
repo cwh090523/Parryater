@@ -19,39 +19,6 @@ struct Position {
 	}
 };
 
-struct GameState
-{
-	Scene currentScene;
-	bool isRunning;
-	ULONGLONG currentTime;
-	TitleData titleData;
-	SettingData settingData;
-	InGameData inGameData;
-	ShopData shopData;
-
-
-};
-struct TitleData
-{
-	
-};
-struct SettingData
-{
-	
-	
-};
-struct InGameData
-{
-	bool isPaused;
-	bool isGameOver;
-	int score;
-	Player player;
-	std::vector<Enemy*> enemies;
-	std::vector<Bullet*> bullets;
-};
-struct ShopData {
-
-};
 
 struct Stats
 {
