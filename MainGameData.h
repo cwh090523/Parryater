@@ -93,6 +93,7 @@ class Enemy {
 		Position pos;
 		Position moveDir;
 		FloatPosition floatPos;
+		bool isAlive = true;
 		virtual void EnemyUpdate();
 
 };
@@ -122,7 +123,8 @@ class Bullet {
 	Position pos;
 	Position moveDir;
 	FloatPosition floatPos;
-	int damage;
+	bool isActive = true;
+	int damage = 0;
 	float MoveSpeed = 0;
 	ProjectileType type;
 	int lifeTime = 0;
