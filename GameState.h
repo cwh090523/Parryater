@@ -9,23 +9,12 @@
 constexpr int WIDTH = 160;
 constexpr int HEIGHT = 45;
 
-struct GameState
-{
-	Scene prevScene = Scene::NONE;
-	Scene curScene = Scene::INGAME;
-	bool isRunning = true;
-	TitleData titleData;
-	SettingData settingData;
-	InGameData inGameData;
-	ShopData shopData;
-	ULONGLONG curTime;
-};
-
 struct TitleData
 {
 	Menu curMenu = Menu::START;
 
 };
+
 struct SettingData
 {
 	SettingsMenu curMenu = SettingsMenu::VOLUME;
@@ -91,4 +80,15 @@ struct ShopData {
 };
 struct StageData {
 
+};
+struct GameState
+{
+	Scene prevScene = Scene::NONE;
+	Scene curScene = Scene::INGAME;
+	bool isRunning = true;
+	TitleData titleData;
+	SettingData settingData;
+	InGameData inGameData;
+	ShopData shopData;
+	ULONGLONG curTime;
 };
