@@ -16,10 +16,6 @@ int main()
 	InitTitle(state);
 	while (true)
 	{
-<<<<<<< HEAD
-		UpdateTitle(title,state);
-		RenderTitle(title);
-=======
 
 		if (state.prevScene != state.curScene) {
 			switch (state.curScene)
@@ -66,6 +62,5 @@ int main()
 				break;
 
 		}
->>>>>>> SiriusSquare
 	}
 }
