@@ -2,8 +2,8 @@
 #include "GameState.h"
 #include "Console.h"
 void InitTitle(GameState& state);
-void UpdateTitle(GameState& state);
-void RenderTitle(const GameState& state);
+void UpdateTitle(TitleData& title, GameState& state);
+void RenderTitle(const TitleData& state);
 
 void UpdateInfo(GameState& state);
 void RenderInfo(const GameState& state);

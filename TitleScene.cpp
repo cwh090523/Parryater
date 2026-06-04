@@ -9,21 +9,21 @@ void InitTitle(GameState& state)
 	MatirixAinimaion("Parryater ", 40, 50);
 	system("cls");
 }
-void UpdateTitle(GameState& state)
+void UpdateTitle(TitleData& title, GameState& state)
 {
 	AsciiUpdate(objs);
 	// 키 입력 화살표 왔다갔다
 	if (GetKeyDown(VK_UP))
 	{
-		state.curMenu = (Menu)std::max((int)Menu::START, (int)state.curMenu - 1);
+		title.curMenu = (Menu)std::max((int)Menu::START, (int)title.curMenu - 1);
 	}
 	if (GetKeyDown(VK_DOWN))
 	{
-		state.curMenu = (Menu)std::min((int)Menu::QUIT, (int)state.curMenu + 1);
+		title.curMenu = (Menu)std::min((int)Menu::QUIT, (int)title.curMenu + 1);
 	}
 	if (GetKeyDown(VK_SPACE) || GetKeyDown(VK_RETURN))
 	{
-		switch (state.curMenu)
+		switch (title.curMenu)
 		{
 		case Menu::START:
 			PlayTransition();
@@ -39,7 +39,7 @@ void UpdateTitle(GameState& state)
 	}
 }
 
-void RenderTitle(const GameState& state)
+void RenderTitle(const TitleData& state)
 {
 	AsciiRender(objs);
 	// 그려주기
