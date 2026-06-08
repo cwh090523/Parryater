@@ -8,9 +8,53 @@
 constexpr int WIDTH = 160;
 constexpr int HEIGHT = 45;
 
+
 class Enemy;
 class Bullet;
 
+struct TitleData
+{
+	Menu curMenu = Menu::START;
+
+};
+
+struct SettingData
+{
+	SettingsMenu curMenu = SettingsMenu::VOLUME;
+	bool isSelected = false;
+	int selectIndex = 0;
+	float bgmVolume = 0.5f;
+	float sfxVolume = 0.5f;
+	MovementSettingData movementSettingData;
+	void MovecurMenu(int direction) {
+		selectIndex = 0;
+		curMenu = static_cast<SettingsMenu>(selectIndex);
+	}
+	void SelectMenu() {
+
+		if (curMenu == SettingsMenu::RESET) {
+			ResetSettings();
+			return;
+		}
+		isSelected = true;
+		if (isSelected) {
+			isSelected = false;
+		}
+	}
+	
+	void ResetSettings() {
+		bgmVolume = 0.5f;
+		sfxVolume = 0.5f;
+		movementSettingData.moveUpKey = 'W';
+		movementSettingData.moveDownKey = 'S';
+		movementSettingData.moveLeftKey = 'A';
+		movementSettingData.moveRightKey = 'D';
+		movementSettingData.BombKey = 'E';
+		movementSettingData.SelectKey = VK_RETURN;
+		movementSettingData.dashKey = VK_SPACE;
+	}
+
+};
 struct MovementSettingData
 {
 	char moveUpKey = 'W';
