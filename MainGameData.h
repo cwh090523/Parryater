@@ -29,7 +29,7 @@ public:
 	int hp = 3;
 	int attackPower = 1;
 	int attackSpeed = 200; // 0.2초마다
-	float MoveSpeed = 5; // 1초마다 1칸 이동
+	float MoveSpeed = 1; // 1초마다 N칸 이동(플레이어는 int로 취급함);
 
 	//여기부턴 플레이어 고유 능력치
 	int DashVelocity = 7;
@@ -41,13 +41,15 @@ public:
 	int remingDashTime = 0;
 	int remingDashCooldown = 0;
 	int remingInvisibleTime = 0;
+	
 	Stats stats;
 	Position prevPos = { 0,0 };
 	Position pos = { 0,0 };
 	Position moveDir = { 0,0 };
 	Position lastMoveDir = { 0,0 };
-   FloatPosition floatPos = { 0,0 };
-	ULONGLONG lastAttackTime;
+    FloatPosition floatPos = { 0,0 };
+    ULONGLONG lastAttackTime;
+    ULONGLONG lastMoveTime;
 	void PlayerUpdate();
 };
 

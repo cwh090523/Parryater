@@ -19,6 +19,8 @@ void InGameInit(GameState& state) {
     state.inGameData.player.pos = { 10, 10 };
     state.inGameData.player.floatPos = { 10.0f, 10.0f };
     state.inGameData.player.prevPos = { 10, 10 };
+    state.inGameData.player.stats.MoveSpeed = 50;
+	state.inGameData.player.lastMoveTime = state.curTime;;
 }
 
 void InGameUpdate(GameState& state) {
@@ -64,19 +66,33 @@ void InGameRender(const GameState& state) {
 void PlayerMove(GameState& state) {
     Player& player = state.inGameData.player;
 
-    float dt = 0.016f;
-    float moveAmount = player.stats.MoveSpeed * dt;
-
-    if (player.moveDir.x != 0 && player.moveDir.y != 0) {
-        moveAmount *= (1.0f / std::sqrt(2.0f));
+    if (state.curTime < player.lastMoveTime + player.stats.MoveSpeed) {
+        return;
     }
 
-    player.floatPos.x += player.moveDir.x * moveAmount;
-    player.floatPos.y += player.moveDir.y * moveAmount;
 
-    player.floatPos.x = std::max(0.0f, std::min(player.floatPos.x, (float)WIDTH - 1));
-    player.floatPos.y = std::max(0.0f, std::min(player.floatPos.y, (float)HEIGHT - 1));
+    if (player.moveDir.x == 0 && player.moveDir.y == 0) {
+        return;
+    }
 
-    player.pos.x = static_cast<int>(player.floatPos.x);
-    player.pos.y = static_cast<int>(player.floatPos.y);
+
+    player.prevPos = player.pos;
+
+    player.pos.x += player.moveDir.x * 2;
+    player.pos.y += player.moveDir.y;
+
+    player.pos.x = std::max(0, std::min(player.pos.x, WIDTH - 1));
+    player.pos.y = std::max(0, std::min(player.pos.y, HEIGHT - 1));
+
+
+    player.lastMoveTime = state.curTime;
+
+    // float dt = 0.016f;
+    // float moveAmount = player.stats.MoveSpeed * dt;
+    // if (player.moveDir.x != 0 && player.moveDir.y != 0) {
+    //     moveAmount *= (1.0f / std::sqrt(2.0f));
+    // }
+    // player.floatPos.x += player.moveDir.x * moveAmount;
+    // ...
+
 }

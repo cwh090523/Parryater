@@ -27,9 +27,6 @@
     <ClCompile Include="EndingScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameOverScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="InGameScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="AsciiArt.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="EndingScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameOverScene.h">

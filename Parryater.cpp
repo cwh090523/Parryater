@@ -18,6 +18,8 @@ int main()
 	{
 
 	FrameSync(60);
+	state.curTime = GetTickCount64();
+	UpdateInput();
 		if (state.prevScene != state.curScene) {
 			switch (state.curScene)
 			{
