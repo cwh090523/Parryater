@@ -78,9 +78,7 @@ public:
 	Enmey1(Stats astat, Position apos);
 	~Enmey1();
 
-	void EnemyUpdate() {
-		
-	}
+	void EnemyUpdate();
 };
 
 class Bullet {
@@ -104,7 +102,5 @@ public:
 	float MoveSpeed = 0;
 	ProjectileType type;
 	int lifeTime = 0;
-	void ProjectileUpdate() {
-
-	}
+	void ProjectileUpdate();
 };

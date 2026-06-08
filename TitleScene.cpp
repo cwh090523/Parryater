@@ -6,7 +6,7 @@ static AsciiObjs objs;
 void InitTitle(GameState& state)
 {
 	AsciiInit(objs);
-	MatirixAinimaion("Parryater ", 40, 50);
+	MatrixAnimation("Parryater ", 40, 50);
 	system("cls");
 }
 void UpdateTitle(TitleData& title, GameState& state)
@@ -157,7 +157,7 @@ char RandomChar()
 	return pool[std::rand() % pool.size()];
 }
 
-void MatirixAinimaion(const string& target, int frames, int ms)
+void MatrixAnimation(const string& target, int frames, int ms)
 {
 	int n = target.size();
 

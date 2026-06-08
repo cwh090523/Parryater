@@ -1,9 +1,9 @@
 
 #pragma once
 #include "Console.h"
-#include "MainGameData.h" 
+struct GameState;
 
 void ShopInit(GameState& state);
 void ShopUpdate(GameState& state);
-void ShopRender(GameState state);
+void ShopRender(const GameState& state);
 

@@ -12,22 +12,22 @@ void UpdateTitle(GameState& state)
 	// 키 입력 화살표 왔다갔다
 	if (GetKeyDown(VK_UP))
 	{
-		state.curMenu = (Menu)std::max((int)Menu::START, (int)state.curMenu - 1);
+		state.titleData.curMenu = (Menu)std::max((int)Menu::START, (int)state.titleData.curMenu - 1);
 	}
 	if (GetKeyDown(VK_DOWN))
 	{
-		state.curMenu = (Menu)std::min((int)Menu::QUIT, (int)state.curMenu + 1);
+		state.titleData.curMenu = (Menu)std::min((int)Menu::QUIT, (int)state.titleData.curMenu + 1);
 	}
 	if (GetKeyDown(VK_SPACE) || GetKeyDown(VK_RETURN))
 	{
-		switch (state.curMenu)
+		switch (state.titleData.curMenu)
 		{
 		case Menu::START:
 			PlayTransition();
 			state.curScene = Scene::INGAME;
 			break;
 		case Menu::SETTING:
-			state.curScene = Scene::INFO;
+			state.curScene = Scene::SETTING;
 			break;
 		case Menu::QUIT:
 			state.isRunning = false;
@@ -47,7 +47,7 @@ void RenderTitle(const GameState& state)
 	const string labels[] = { "게임 시작", "게임 정보", "게임 종료" };
 	for (int i = 0;i < 3; ++i) {
 		GotoXY(x - 2, y + i);
-		cout << (i == (int)state.curMenu ? ">" : " ") << " " << labels[i];
+		cout << (i == (int)state.titleData.curMenu ? ">" : " ") << " " << labels[i];
 	}
 
 	const wstring ascii[] =
