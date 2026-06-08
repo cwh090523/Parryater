@@ -1,21 +1,23 @@
-
 #pragma once
 #include "enums.h"
 #include <Windows.h>
 #include <vector>
-using namespace std;
-struct FloatPosition {
-	float x; float y;
 
-	bool operator==(const Position& other) const {
-		return x == other.x && y == other.y;
-	}
-};
+using namespace std;
+
 struct Position {
 	int x; int y;
 
 	bool operator==(const Position& other) const {
 		return x == other.x && y == other.y;
+	}
+};
+
+struct FloatPosition {
+	float x; float y;
+
+	bool operator==(const FloatPosition& other) const {
+		return (abs(x - other.x) < 0.001f) && (abs(y - other.y) < 0.001f);
 	}
 };
 

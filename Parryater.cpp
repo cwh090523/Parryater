@@ -41,8 +41,8 @@ int main()
 		switch (state.curScene)
 		{
 			case Scene::TITLE:
-			UpdateTitle(state);
-			RenderTitle(state);
+				UpdateTitle(title, state);
+				RenderTitle(title);
 			break;
 			case Scene::SETTING: // 완벽 미구현
 				SettingUpdate(state);
@@ -62,5 +62,6 @@ int main()
 				break;
 
 		}
+
 	}
 }
