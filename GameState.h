@@ -80,7 +80,7 @@ struct SettingData
 	MovementSettingData movementSettingData;
 
 	void MovecurMenu(int direction) {
-		selectIndex = += direction;
+		selectIndex += direction;
 		curMenu = static_cast<SettingsMenu>(selectIndex);
 	}
 
