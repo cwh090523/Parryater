@@ -142,8 +142,8 @@
   <ItemGroup>
     <ClInclude Include="AsciiArt.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="EndingScene.h" />
     <ClInclude Include="enums.h" />
-    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="MainGameData.h" />

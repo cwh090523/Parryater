@@ -2,7 +2,9 @@
 #include "enums.h"
 #include <Windows.h>
 #include <vector>
-
+struct GameState;
+class Enemy;
+class Bullet;
 using namespace std;
 
 struct Position {
@@ -71,7 +73,7 @@ class Enemy {
 		FloatPosition floatPos = { 0,0 };
 
 		bool isAlive = true;
-		virtual void EnemyUpdate();
+		virtual void EnemyUpdate() = 0;
 
 };
 class Enmey1 : public Enemy
@@ -80,7 +82,7 @@ public:
 	Enmey1(Stats astat, Position apos);
 	~Enmey1();
 
-	void EnemyUpdate();
+	void EnemyUpdate(GameState& state);
 };
 
 class Bullet {
@@ -104,5 +106,5 @@ public:
 	float MoveSpeed = 0;
 	ProjectileType type;
 	int lifeTime = 0;
-	void ProjectileUpdate();
+	void ProjectileUpdate(GameState& state);
 };

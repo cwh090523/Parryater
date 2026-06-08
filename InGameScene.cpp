@@ -46,6 +46,12 @@ void InGameUpdate(GameState& state) {
     if (GetKey(msd.moveRightKey)) player.moveDir.x = 1;
 
     PlayerMove(state);
+    PlayerAttack(state);
+ //   for (Bullet& bullet : state.inGameData.bullets) {
+ //       if (bullet.isActive) {
+ //           bullet.ProjectileUpdate(state);
+ //       }
+	//}
 }
 
 void InGameRender(const GameState& state) {
@@ -60,6 +66,13 @@ void InGameRender(const GameState& state) {
         cout << "@";
 
         const_cast<Player&>(player).prevPos = player.pos;
+    }
+    for (Bullet bullet : state.inGameData.bullets) {
+        if (bullet.isActive) {
+            GotoXY(player.pos.x, player.pos.y);
+            SetColor(Color::LIGHT_GREEN);
+            cout << "V";
+        }
     }
 }
 
@@ -95,4 +108,14 @@ void PlayerMove(GameState& state) {
     // player.floatPos.x += player.moveDir.x * moveAmount;
     // ...
 
+}
+void PlayerAttack(GameState& state) {
+    Player& player = state.inGameData.player;
+    if (GetKeyDown(state.settingData.movementSettingData.SelectKey)) {
+        if (state.curTime >= player.lastAttackTime + player.stats.attackSpeed) {
+			Bullet bullet = Bullet(player.pos, Position{0,1}, player.stats.attackPower, 1.0f, 100, ProjectileType::Player);
+            state.inGameData.bullets.push_back(bullet);
+            player.lastAttackTime = state.curTime;
+        }
+    }
 }

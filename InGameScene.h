@@ -6,3 +6,4 @@ void InGameUpdate(GameState& state);
 void InGameRender(const GameState& state);
 
 void PlayerMove(GameState& state);
+void PlayerAttack(GameState& state);
