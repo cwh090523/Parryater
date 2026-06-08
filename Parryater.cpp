@@ -17,6 +17,7 @@ int main()
 	while (true)
 	{
 
+	FrameSync(60);
 		if (state.prevScene != state.curScene) {
 			switch (state.curScene)
 			{
