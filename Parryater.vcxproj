@@ -130,8 +130,8 @@
     <ClCompile Include="AsciiArt.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Console.cpp" />
-    <ClCompile Include="EndingScene.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="Parryater.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -142,8 +142,8 @@
   <ItemGroup>
     <ClInclude Include="AsciiArt.h" />
     <ClInclude Include="Console.h" />
-    <ClInclude Include="EndingScene.h" />
     <ClInclude Include="enums.h" />
+    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="MainGameData.h" />

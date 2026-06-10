@@ -69,8 +69,8 @@ struct InGameData
     bool isGameOver = false;
     int score = 0;
     Player player;
-    std::vector<Enemy> enemies;
-    std::vector<Bullet> bullets;
+    vector<unique_ptr<Enemy>> enemies;
+    vector<Bullet> bullets;
 };
 
 struct ShopData {};

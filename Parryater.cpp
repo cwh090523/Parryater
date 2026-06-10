@@ -2,7 +2,7 @@
 #include"SettingScene.h"
 #include "InGameScene.h"
 #include "ShopScene.h"
-#include "EndingScene.h"	
+#include "GameOverScene.h"
 #include "enums.h"
 #include "Console.h"
 #include "GameState.h"
@@ -18,7 +18,7 @@ int main()
 	while (true)
 	{
 
-	FrameSync(60);
+	FrameSync(100);
 	state.curTime = GetTickCount64();
 	UpdateInput();
 		if (state.prevScene != state.curScene) {
@@ -37,7 +37,7 @@ int main()
 				ShopInit(state);
 				break;
 			case Scene::GAMEOVER:
-				EndingInit(state);
+				GameOverInit(state);
 				break;
 			}
 			state.prevScene = state.curScene;
@@ -55,14 +55,16 @@ int main()
 			case Scene::INGAME:
 				InGameUpdate(state);
 				InGameRender(state);
+
+				InGameAfterUpdate(state);
 				break;
 			case Scene::SHOP: // 완벽 미구현
 				ShopUpdate(state);
 				ShopRender(state);
 				break;
 			case Scene::GAMEOVER:// 완벽 미구현
-				EndingUpdate(state);
-				EndingRender(state);
+				GameOverUpdate(state);
+				GameOverRender(state);
 				break;
 
 		}
