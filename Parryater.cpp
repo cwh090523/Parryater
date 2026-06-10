@@ -14,6 +14,7 @@ int main()
 	SetConsoleWindowStyle(true);
 	SetcursorVisble(false);
 	InitTitle(state);
+	srand(time(nullptr));
 	while (true)
 	{
 

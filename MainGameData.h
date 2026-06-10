@@ -30,7 +30,7 @@ public:
 	int maxHp = 3;
 	int hp = 3;
 	int attackPower = 1;
-	int attackSpeed = 200; // 0.2초마다
+	int attackSpeed = 50; // 0.2초마다
 	float MoveSpeed = 1; // 1초마다 N칸 이동(플레이어는 int로 취급함);
 
 	//여기부턴 플레이어 고유 능력치
@@ -94,17 +94,21 @@ class Bullet {
 			type = atype;
 			lifeTime = alifeTime;
 			MoveSpeed = amoveSpeed;
-			floatPos = { static_cast<float>(apos.x), static_cast<float>(apos.y) };
+			lastMoveTime = GetTickCount64();
+			lifeTime = lastMoveTime + alifeTime;
+			//floatPos = { static_cast<float>(apos.x), static_cast<float>(apos.y) };
 	}
 public:
 	~Bullet();
 	Position pos;
 	Position moveDir;
-	FloatPosition floatPos;
+	Position prevPos;
+	//FloatPosition floatPos;
 	bool isActive = true;
 	int damage = 0;
 	float MoveSpeed = 0;
 	ProjectileType type;
-	int lifeTime = 0;
+	ULONGLONG lifeTime;
+	ULONGLONG lastMoveTime;
 	void ProjectileUpdate(GameState& state);
 };
