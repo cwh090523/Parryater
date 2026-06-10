@@ -1,14 +1,12 @@
 #pragma once
-#include <string>
-#include "GameState.h"
+//#include <string>
 #include "Console.h"
+#include "GameState.h"
 
 void InitTitle(GameState& state);
-void UpdateTitle(TitleData& title, GameState& state);
-void RenderTitle(const TitleData& title);
+void UpdateTitle(GameState& state);
+void RenderTitle(const GameState& state);
 
-void UpdateInfo(GameState& state);
-void RenderInfo(const GameState& state);
 
 void PlayTransition();
 void FlashAnimation(COORD resolution, int count, int delayMs);

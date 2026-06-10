@@ -20,7 +20,7 @@ void RenderChar(char ch, int delayTime, bool isSkip)
 	}
 	if (isSkip)
 		return;
-	int calcDelay = delayTime + (rand() & 11 - 5);
+	int calcDelay = delayTime + (rand() % 11) - 5;
 	switch (ch)
 	{
 		// 오타연출
@@ -158,8 +158,8 @@ void ShakeConsoleWindow(int intensity, int duration, int interval)
 		int offsetY = rand() % (intensity * 2 + 1) - intensity;
 
 		SetWindowPos(hWnd, nullptr,
-			offsetX + offsetY,
-			offsetY + offsetX,
+			offsetX + otiginX,
+			offsetY + otiginY,
 			0, 0, SWP_NOSIZE);
 		Sleep(interval);
 	}
