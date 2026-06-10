@@ -20,7 +20,7 @@ struct MovementSettingData
     char moveDownArrowKey = VK_DOWN;
     char moveLeftArrowKey = VK_LEFT;
     char moveRightArrowKey = VK_RIGHT;
-    char SelectKey = VK_RETURN;
+    char SelectKey = 'Q';
     char BombKey = 'E';
     char dashKey = VK_SPACE;
 };
@@ -69,8 +69,8 @@ struct InGameData
     bool isGameOver = false;
     int score = 0;
     Player player;
-    std::vector<Enemy> enemies;
-    std::vector<Bullet> bullets;
+    vector<unique_ptr<Enemy>> enemies;
+    vector<Bullet> bullets;
 };
 
 struct ShopData {};

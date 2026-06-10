@@ -24,12 +24,6 @@
     <ClCompile Include="AsciiArt.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="EndingScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GameOverScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="InGameScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -51,6 +45,9 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GameOverScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h">
@@ -68,12 +65,6 @@
     <ClInclude Include="AsciiArt.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="EndingScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="GameOverScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="InGameScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -84,6 +75,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TitleScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
