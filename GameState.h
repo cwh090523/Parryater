@@ -79,7 +79,7 @@ struct StageData {};
 struct GameState
 {
     Scene prevScene = Scene::NONE;
-    Scene curScene = Scene::INGAME;
+    Scene curScene = Scene::TITLE;
     bool isRunning = true;
     TitleData titleData;
     SettingData settingData;

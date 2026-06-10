@@ -132,6 +132,7 @@
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="EndingScene.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="Parryater.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="EndingScene.h" />
     <ClInclude Include="enums.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InGameScene.h" />

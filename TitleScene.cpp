@@ -5,25 +5,27 @@
 static AsciiObjs objs;
 void InitTitle(GameState& state)
 {
+	system("cls");
 	AsciiInit(objs);
 	MatrixAnimation("Parryater ", 40, 50);
 	system("cls");
+
 }
-void UpdateTitle(TitleData& title, GameState& state)
+void UpdateTitle(GameState& state)
 {
 	AsciiUpdate(objs);
 	// 키 입력 화살표 왔다갔다
 	if (GetKeyDown(VK_UP))
 	{
-		title.curMenu = (Menu)std::max((int)Menu::START, (int)title.curMenu - 1);
+		state.titleData.curMenu = (Menu)std::max((int)Menu::START, (int)state.titleData.curMenu - 1);
 	}
 	if (GetKeyDown(VK_DOWN))
 	{
-		title.curMenu = (Menu)std::min((int)Menu::QUIT, (int)title.curMenu + 1);
+		state.titleData.curMenu = (Menu)std::min((int)Menu::QUIT, (int)state.titleData.curMenu + 1);
 	}
 	if (GetKeyDown(VK_SPACE) || GetKeyDown(VK_RETURN))
 	{
-		switch (title.curMenu)
+		switch (state.titleData.curMenu)
 		{
 		case Menu::START:
 			PlayTransition();
@@ -39,7 +41,7 @@ void UpdateTitle(TitleData& title, GameState& state)
 	}
 }
 
-void RenderTitle(const TitleData& state)
+void RenderTitle(const GameState& state)
 {
 	AsciiRender(objs);
 	// 그려주기
@@ -47,10 +49,10 @@ void RenderTitle(const TitleData& state)
 	int x = res.X / 2 - 4;
 	int y = res.Y / 3 * 2;
 
-	const string labels[] = { "게임 시작", "게임 정보", "게임 종료" };
+	const string labels[] = { "게임 시작", "게임 설정", "게임 종료" };
 	for (int i = 0;i < 3; ++i) {
 		GotoXY(x - 2, y + i);
-		cout << (i == (int)state.curMenu ? ">" : " ") << " " << labels[i];
+		cout << (i == (int)state.titleData.curMenu ? ">" : " ") << " " << labels[i];
 	}
 	const wstring ascii[] =
 	{
@@ -76,41 +78,6 @@ void RenderTitle(const TitleData& state)
 	SetDeraultMode();
 }
 
-void UpdateInfo(GameState& state)
-{
-	if (GetKeyDown(VK_ESCAPE)) {
-		state.curScene = Scene::TITLE;
-	}
-}
-
-void RenderInfo(const GameState& state)
-{
-	// 화면 중앙에 출력
-	COORD res = GetConsoleResolution();
-	int cx = res.X / 2;
-	int cy = res.Y / 3;
-
-	const string infoLabels[] =
-	{
-		"[ 조작 방법 ]",
-		"방향키  : 이동",
-		"SPACE  : 폭탄 설치",
-		"Z      : 스킬",
-		"ESC 로 돌아가기"
-	};
-	for (int i = 0; i < 5; ++i)
-	{
-		GotoXY(cx - 6, cy + i);
-		if (i == 0)
-			SetColor(Color::LIGHT_YELLOW);
-		else if (i == 4)
-			SetColor(Color::LIGHT_GRAY);
-		else
-			SetColor();
-		cout << infoLabels[i];
-	}
-}
-
 void PlayTransition()
 {
 	COORD res = GetConsoleResolution();
@@ -123,11 +90,11 @@ void PlayTransition()
 void FlashAnimation(COORD resolution, int count, int delayMs)
 {
 	for (int i = 0; i < count; ++i) {
-		SetColor(Color::BLACK, Color::RED);
+		SetColor(Color::BLACK, Color::GREEN);
 		system("cls");
 		Sleep(delayMs);
 
-		SetColor(Color::BLACK, Color::BLUE);
+		SetColor(Color::BLACK, Color::BLACK);
 		system("cls");
 		Sleep(delayMs);
 	}
@@ -137,7 +104,7 @@ void CrossAnimation(COORD resolution, int delayMs)
 {
 	SetColor(Color::BLACK, Color::WHITE);
 	for (int x = 0; x < resolution.X / 2; ++x) {
-		for (int y = 0; y < resolution.Y; y += 2) {
+		for (int y = 0; y < resolution.Y ; y += 2) {
 			GotoXY(x * 2, y);
 			cout << "  ";
 		}
@@ -185,4 +152,5 @@ void MatrixAnimation(const string& target, int frames, int ms)
 	SetColor(Color::LIGHT_GREEN);
 	cout << target;
 	SetColor();
+	Sleep(500);
 }
