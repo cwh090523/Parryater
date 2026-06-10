@@ -29,13 +29,12 @@ struct Stats {
     float MoveSpeed = 1;
     int DashVelocity = 7;
     int DashCooldown = 1500;
-};
-
-class Player {
+}; class Player {
 public:
-    int remingDashTime = 0;
-    int remingDashCooldown = 0;
-    int remingInvisibleTime = 0;
+    ULONGLONG dashStartTime = 0;
+    ULONGLONG dashEndTime = 0;
+    ULONGLONG dashCooldownEndTime = 0;
+
     Stats stats;
     Position prevPos = { 0,0 };
     Position pos = { 0,0 };
@@ -45,8 +44,14 @@ public:
     ULONGLONG lastAttackTime = 0;
     ULONGLONG lastMoveTime = 0;
     void PlayerUpdate();
-};
 
+    bool IsDashing(ULONGLONG curTime) const {
+        return curTime >= dashStartTime && curTime < dashEndTime;
+    }
+    bool CanDash(ULONGLONG curTime) const {
+        return curTime >= dashCooldownEndTime;
+    }
+};
 class Enemy {
 public:
     Stats stats;

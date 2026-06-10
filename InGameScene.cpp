@@ -1,4 +1,4 @@
-#include "Console.h"
+﻿#include "Console.h"
 #include "MainGameData.h" 
 #include "InGameScene.h"
 #include "GameState.h"
@@ -14,9 +14,9 @@ void InGameInit(GameState& state) {
     state.inGameData.enemies.clear();
     state.inGameData.bullets.clear();
 
-    state.inGameData.player.pos = { 10, 10 };
-    state.inGameData.player.floatPos = { 10.0f, 10.0f };
-    state.inGameData.player.prevPos = { 10, 10 };
+    state.inGameData.player.pos = { 55, 35 };
+    state.inGameData.player.floatPos = { 55.0f, 35.0f };
+    state.inGameData.player.prevPos = { 55, 35 };
     state.inGameData.player.stats.MoveSpeed = 50;
     state.inGameData.player.lastMoveTime = state.curTime;
     state.inGameData.player.lastAttackTime = state.curTime;
@@ -43,8 +43,11 @@ void InGameCollision(GameState& state) {
     for (const auto& enemy : state.inGameData.enemies) {
         if (!enemy->isAlive) continue;
         if (abs(enemy->pos.x - player.pos.x) <= 1 && enemy->pos.y == player.pos.y) {
-            if (player.remingDashTime <= 0) {
-                state.inGameData.isGameOver = true;
+            if (!player.IsDashing(state.curTime)) {
+                player.stats.hp--;
+                if (player.stats.hp <= 0) {
+                    state.inGameData.isGameOver = true;
+                }
             }
         }
     }
@@ -103,52 +106,106 @@ void InGameUpdate(GameState& state) {
 
 void DashPlayer(GameState& state) {
     Player& player = state.inGameData.player;
-    if (player.remingDashCooldown > 0) return;
+    if (!player.CanDash(state.curTime)) return;
 
-    player.remingDashTime = player.stats.DashVelocity;
-    player.remingDashCooldown = player.stats.DashCooldown;
-}
-
-void InGameRender(const GameState& state) {
-    const Player& player = state.inGameData.player;
-
-    for (const Bullet& bullet : state.inGameData.bullets) {
-        GotoXY(bullet.prevPos.x, bullet.prevPos.y);
-        cout << " ";
-        if (bullet.isActive) {
-            GotoXY(bullet.pos.x, bullet.pos.y);
-            SetColor(Color::LIGHT_RED);
-            cout << "V";
-        }
-    }
-
-    GotoXY(player.prevPos.x, player.prevPos.y);
-    cout << " ";
-
-    GotoXY(player.pos.x, player.pos.y);
-    SetColor(player.remingDashTime > 0 ? Color::WHITE : Color::LIGHT_GREEN);
-    cout << "@";
-    SetColor();
+    player.dashStartTime = state.curTime;
+    player.dashEndTime = state.curTime + 200;
+    player.dashCooldownEndTime = state.curTime + player.stats.DashCooldown;
 }
 
 void PlayerMove(GameState& state) {
     Player& player = state.inGameData.player;
 
-    if (player.remingDashCooldown > 0) player.remingDashCooldown--;
-    if (player.remingDashTime > 0)     player.remingDashTime--;
-
     if (state.curTime < player.lastMoveTime + (ULONGLONG)player.stats.MoveSpeed) return;
     if (player.moveDir.x == 0 && player.moveDir.y == 0) return;
 
-    int speed = (player.remingDashTime > 0) ? 2 : 1;
+    int speed = player.IsDashing(state.curTime) ? 2 : 1;
 
     player.pos.x += player.moveDir.x * 2 * speed;
     player.pos.y += player.moveDir.y * speed;
 
-    player.pos.x = std::max(0, std::min(player.pos.x, WIDTH - 1));
+    player.pos.x = std::max(0, std::min(player.pos.x, GAME_WIDTH - 1));
     player.pos.y = std::max(0, std::min(player.pos.y, HEIGHT - 1));
 
     player.lastMoveTime = state.curTime;
+}
+
+void RenderBorder() {
+    SetColor(Color::WHITE);
+    for (int y = 0; y < HEIGHT; ++y) {
+        GotoXY(UI_X - 2, y);
+        cout << "|";
+    }
+    SetColor();
+}
+
+void RenderUI(const GameState& state) {
+    const Player& player = state.inGameData.player;
+    const InGameData& data = state.inGameData;
+
+    SetColor(Color::LIGHT_YELLOW);
+    GotoXY(UI_X, 2);
+    cout << "SCORE";
+    SetColor(Color::WHITE);
+    GotoXY(UI_X, 3);
+    cout << data.score;
+
+    GotoXY(UI_X, 6);
+    SetColor(Color::LIGHT_YELLOW);
+    cout << "STAGE";
+    SetColor(Color::WHITE);
+    GotoXY(UI_X, 7);
+    cout << "1";
+
+    GotoXY(UI_X, 10);
+    SetColor(Color::LIGHT_YELLOW);
+    cout << "HP";
+    SetColor(Color::LIGHT_RED);
+    GotoXY(UI_X, 11);
+    string hp = "";
+    for (int i = 0; i < player.stats.maxHp; ++i)
+        hp += (i < player.stats.hp) ? "♥ " : "♡ ";
+    cout << hp;
+
+    GotoXY(UI_X, 14);
+    SetColor(Color::LIGHT_YELLOW);
+    cout << "STATS";
+    SetColor(Color::WHITE);
+    GotoXY(UI_X, 15);
+    cout << "ATK : " << player.stats.attackPower;
+    GotoXY(UI_X, 16);
+    cout << "SPD : " << (int)player.stats.MoveSpeed;
+    GotoXY(UI_X, 17);
+    cout << "DASH: " << (player.CanDash(state.curTime) ? "READY" : "COOL ");
+
+    SetColor();
+}
+
+void InGameRender(const GameState& state) {
+    const Player& player = state.inGameData.player;
+
+    RenderBorder();
+    RenderUI(state);
+
+    SetUnicodeMode();
+    for (const Bullet& bullet : state.inGameData.bullets) {
+        GotoXY(bullet.prevPos.x, bullet.prevPos.y);
+        wcout << L" ";
+        if (bullet.isActive) {
+            GotoXY(bullet.pos.x, bullet.pos.y);
+            SetColor(Color::LIGHT_RED);
+            wcout << L"●";
+        }
+    }
+
+    GotoXY(player.prevPos.x, player.prevPos.y);
+    wcout << L" ";
+
+    SetColor(player.IsDashing(state.curTime) ? Color::WHITE : Color::LIGHT_GREEN);
+    GotoXY(player.pos.x, player.pos.y);
+    wcout << L"▲";
+    SetDeraultMode();
+    SetColor();
 }
 
 void PlayerAttack(GameState& state) {

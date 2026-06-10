@@ -8,6 +8,7 @@ void InGameAfterUpdate(GameState& state);
 
 void PlayerMove(GameState& state);
 void PlayerAttack(GameState& state);
-void DashPlayer(GameState& state);
-
+void RenderBorder();
+void RenderUI(const GameState& state);
 void InGameCollision(GameState& state);
+void DashPlayer(GameState& state);
