@@ -8,16 +8,10 @@
 
 using namespace std;
 
-// =================================================================
-// 1. 적 스폰 팩토리 함수 정의
-// =================================================================
 static unique_ptr<Enemy> SpawnRusher(Stats stat, Position pos) { return make_unique<EnemyRusher>(stat, pos); }
 static unique_ptr<Enemy> SpawnShooter(Stats stat, Position pos) { return make_unique<EnemyShooter>(stat, pos); }
 static unique_ptr<Enemy> SpawnZigzag(Stats stat, Position pos) { return make_unique<EnemyZigzag>(stat, pos); }
 
-// =================================================================
-// 2. 스테이지 관리 로직
-// =================================================================
 void StageInit(GameState& state) {
     state.stageData.curWave = 0;
     state.stageData.enemiesRemaining = 0;
@@ -65,9 +59,6 @@ void StageUpdate(GameState& state) {
     sd.lastSpawnTime = state.curTime;
 }
 
-// =================================================================
-// 3. 인게임 초기화 및 충돌 판정
-// =================================================================
 void InGameInit(GameState& state) {
     system("cls");
     state.inGameData.isPaused = false;
@@ -77,7 +68,6 @@ void InGameInit(GameState& state) {
     state.inGameData.enemies.clear();
     state.inGameData.bullets.clear();
 
-    // 플레이어 기본 스탯 초기화 추가
     state.inGameData.player.stats.maxHp = 10;
     state.inGameData.player.stats.hp = 10;
     state.inGameData.player.stats.attackPower = 1;
@@ -88,40 +78,33 @@ void InGameInit(GameState& state) {
     state.inGameData.player.stats.MoveSpeed = 50;
     state.inGameData.player.lastMoveTime = state.curTime;
     state.inGameData.player.lastAttackTime = state.curTime;
+    state.inGameData.player.invisibleEndTime = 0;
 
     StageInit(state);
 }
 
 void InGameCollision(GameState& state) {
     Player& player = state.inGameData.player;
+    bool playerInvincible = player.IsDashing(state.curTime) || state.curTime < player.invisibleEndTime;
 
     for (Bullet& bullet : state.inGameData.bullets) {
         if (!bullet.isActive) continue;
 
-        // 적 총알 -> 플레이어 충돌 체크
-        if (bullet.type != ProjectileType::Player) {
-            if (abs(bullet.pos.x - player.pos.x) <= 1 && bullet.pos.y == player.pos.y) {
-                if (!player.IsDashing(state.curTime)) {
-                    bullet.isActive = false; // 맞은 총알 비활성화 추가
-                    player.stats.hp -= bullet.damage;
-                    ShakeConsoleWindow(5, 50, 25);
-                    if (player.stats.hp <= 0) {
-                        state.inGameData.isGameOver = true;
-                    }
-                }
-                else {
-                    // 대시로 투사체 파괴 처리 시
-                    ShakeConsoleWindow(10, 100, 25);
-                    bullet.isActive = false;
-                }
-            }
-        }
+        if (bullet.type == ProjectileType::Player) {
+            for (auto& enemy : state.inGameData.enemies) {
+                if (!enemy->isAlive) continue;
 
-        // 플레이어 총알 -> 적 충돌 체크
-        for (auto& enemy : state.inGameData.enemies) {
-            if (!enemy->isAlive) continue;
-            if (bullet.type == ProjectileType::Player) {
-                if (abs(bullet.pos.x - enemy->pos.x) <= 1 && bullet.pos.y == enemy->pos.y) {
+                int minEnemyX = min(enemy->prevPos.x, enemy->pos.x) - 1;
+                int maxEnemyX = max(enemy->prevPos.x, enemy->pos.x) + 1;
+                int minEnemyY = min(enemy->prevPos.y, enemy->pos.y);
+                int maxEnemyY = max(enemy->prevPos.y, enemy->pos.y);
+
+                int minBulletX = min(bullet.prevPos.x, bullet.pos.x);
+                int maxBulletX = max(bullet.prevPos.x, bullet.pos.x);
+                int minBulletY = min(bullet.prevPos.y, bullet.pos.y);
+                int maxBulletY = max(bullet.prevPos.y, bullet.pos.y);
+
+                if (maxBulletX >= minEnemyX && minBulletX <= maxEnemyX && maxBulletY >= minEnemyY && minBulletY <= maxEnemyY) {
                     bullet.isActive = false;
                     enemy->stats.hp -= player.stats.attackPower;
                     if (enemy->stats.hp <= 0) {
@@ -132,35 +115,71 @@ void InGameCollision(GameState& state) {
                 }
             }
         }
-    }
+        else {
+            int minPlayerX = min(player.prevPos.x, player.pos.x) - 1;
+            int maxPlayerX = max(player.prevPos.x, player.pos.x) + 1;
+            int minPlayerY = min(player.prevPos.y, player.pos.y);
+            int maxPlayerY = max(player.prevPos.y, player.pos.y);
 
-    // 적 캐릭터 -> 플레이어 충돌 체크
-    for (const auto& enemy : state.inGameData.enemies) {
-        if (!enemy->isAlive) continue;
-        if (abs(enemy->pos.x - player.pos.x) <= 1 && enemy->pos.y == player.pos.y) {
-            if (!player.IsDashing(state.curTime)) {
-                player.stats.hp--;
-                ShakeConsoleWindow(5, 50, 25);
-                if (player.stats.hp <= 0) {
-                    state.inGameData.isGameOver = true;
+            int minBulletX = min(bullet.prevPos.x, bullet.pos.x);
+            int maxBulletX = max(bullet.prevPos.x, bullet.pos.x);
+            int minBulletY = min(bullet.prevPos.y, bullet.pos.y);
+            int maxBulletY = max(bullet.prevPos.y, bullet.pos.y);
+
+            if (maxBulletX >= minPlayerX && minBulletX <= maxPlayerX && maxBulletY >= minPlayerY && minBulletY <= maxPlayerY) {
+                bullet.isActive = false;
+                if (player.IsDashing(state.curTime)) {
+                    ShakeConsoleWindow(15, 150, 15);
+                    player.invisibleEndTime = state.curTime + 800;
+                    player.dashCooldownEndTime = state.curTime;
+                    state.inGameData.score += 200;
+                }
+                else if (!playerInvincible) {
+                    player.stats.hp -= bullet.damage;
+                    player.invisibleEndTime = state.curTime + 500;
+                    ShakeConsoleWindow(5, 50, 25);
+                    if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
                 }
             }
-            else {
-                // 플레이어가 대시로 몸통 박치기 시 적에게 데미지
-                enemy->stats.hp -= player.stats.attackPower;
-                ShakeConsoleWindow(10, 100, 25);
+        }
+    }
+
+    for (const auto& enemy : state.inGameData.enemies) {
+        if (!enemy->isAlive) continue;
+
+        int minPlayerX = min(player.prevPos.x, player.pos.x) - 1;
+        int maxPlayerX = max(player.prevPos.x, player.pos.x) + 1;
+        int minPlayerY = min(player.prevPos.y, player.pos.y);
+        int maxPlayerY = max(player.prevPos.y, player.pos.y);
+
+        int minEnemyX = min(enemy->prevPos.x, enemy->pos.x);
+        int maxEnemyX = max(enemy->prevPos.x, enemy->pos.x);
+        int minEnemyY = min(enemy->prevPos.y, enemy->pos.y);
+        int maxEnemyY = max(enemy->prevPos.y, enemy->pos.y);
+
+        if (maxEnemyX >= minPlayerX && minEnemyX <= maxPlayerX && maxEnemyY >= minPlayerY && minEnemyY <= maxPlayerY) {
+            if (player.IsDashing(state.curTime)) {
+                ShakeConsoleWindow(20, 200, 10);
+                player.invisibleEndTime = state.curTime + 1000;
+                player.dashCooldownEndTime = state.curTime;
+                state.inGameData.score += 300;
+
+                const_cast<Enemy*>(enemy.get())->stats.hp -= (player.stats.attackPower * 3);
                 if (enemy->stats.hp <= 0) {
-                    enemy->isAlive = false;
+                    const_cast<Enemy*>(enemy.get())->isAlive = false;
                     state.inGameData.score += 100;
                 }
+            }
+            else if (!playerInvincible) {
+                player.stats.hp--;
+                player.invisibleEndTime = state.curTime + 500;
+                ShakeConsoleWindow(5, 50, 25);
+                if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
             }
         }
     }
 }
 
-// =================================================================
-// 4. 업데이트 루프 메인
-// =================================================================
 void InGameUpdate(GameState& state) {
     if (GetKeyDown(VK_ESCAPE)) { state.isRunning = false; return; }
     if (state.inGameData.isGameOver) { state.curScene = Scene::GAMEOVER; return; }
@@ -171,22 +190,22 @@ void InGameUpdate(GameState& state) {
     player.lastMoveDir = player.moveDir;
     player.moveDir = { 0, 0 };
 
-    // 키 입력 버그 수정 (ArrowKey 매핑 누락 복구 및 중복 제거)
     if (GetKey(VK_UP) || GetKey(msd.moveUpArrowKey))    player.moveDir.y = -1;
     if (GetKey(VK_DOWN) || GetKey(msd.moveDownArrowKey))  player.moveDir.y = 1;
     if (GetKey(VK_LEFT) || GetKey(msd.moveLeftArrowKey))  player.moveDir.x = -1;
     if (GetKey(VK_RIGHT) || GetKey(msd.moveRightArrowKey)) player.moveDir.x = 1;
     if (GetKeyDown(msd.dashKey)) DashPlayer(state);
 
-    // 1. 플레이어 및 스테이지 상태 업데이트
     PlayerMove(state);
     PlayerAttack(state);
     StageUpdate(state);
 
-    // 2. 총알 및 적 객체들 개별 프레임 이동 업데이트
     for (Bullet& bullet : state.inGameData.bullets) {
         if (bullet.isActive) {
             bullet.ProjectileUpdate(state);
+            if (bullet.pos.y < 0 || bullet.pos.y >= HEIGHT || bullet.pos.x < 0 || bullet.pos.x >= GAME_WIDTH) {
+                bullet.isActive = false;
+            }
         }
     }
     for (auto& enemy : state.inGameData.enemies) {
@@ -195,13 +214,13 @@ void InGameUpdate(GameState& state) {
         }
     }
 
-    // 3. 이동 연산이 모두 끝난 최종 좌표 기준 충돌 처리
     InGameCollision(state);
 
-    // 4. 비활성화된 총알 메모리 및 화면 잔상 정리
     auto iter = state.inGameData.bullets.begin();
     while (iter != state.inGameData.bullets.end()) {
         if (!iter->isActive) {
+            GotoXY(iter->prevPos.x, iter->prevPos.y); cout << " ";
+            GotoXY(iter->pos.x, iter->pos.y);         cout << " ";
             iter = state.inGameData.bullets.erase(iter);
         }
         else {
@@ -209,7 +228,6 @@ void InGameUpdate(GameState& state) {
         }
     }
 
-    // 5. 죽은 적 메모리 및 화면 잔상 정리 (루프 꼬임 방지 고착화)
     auto iter2 = state.inGameData.enemies.begin();
     while (iter2 != state.inGameData.enemies.end()) {
         if ((*iter2)->isAlive) {
@@ -223,9 +241,6 @@ void InGameUpdate(GameState& state) {
     }
 }
 
-// =================================================================
-// 5. 렌더링 및 사후 업데이트
-// =================================================================
 void InGameRender(const GameState& state) {
     const Player& player = state.inGameData.player;
 
@@ -234,11 +249,19 @@ void InGameRender(const GameState& state) {
 
     SetUnicodeMode();
 
-    // 1. 적 그리기
     for (const auto& enemy : state.inGameData.enemies) {
-        if (!enemy->isAlive) continue;
         GotoXY(enemy->prevPos.x, enemy->prevPos.y);
         wcout << L" ";
+    }
+    for (const Bullet& bullet : state.inGameData.bullets) {
+        GotoXY(bullet.prevPos.x, bullet.prevPos.y);
+        wcout << L" ";
+    }
+    GotoXY(player.prevPos.x, player.prevPos.y);
+    wcout << L" ";
+
+    for (const auto& enemy : state.inGameData.enemies) {
+        if (!enemy->isAlive) continue;
         GotoXY(enemy->pos.x, enemy->pos.y);
         if (dynamic_cast<EnemyShooter*>(enemy.get()))     SetColor(Color::SKYBLUE);
         else if (dynamic_cast<EnemyZigzag*>(enemy.get())) SetColor(Color::YELLOW);
@@ -247,21 +270,24 @@ void InGameRender(const GameState& state) {
         SetColor();
     }
 
-    // 2. 총알 그리기
     for (const Bullet& bullet : state.inGameData.bullets) {
-        GotoXY(bullet.prevPos.x, bullet.prevPos.y);
-        wcout << L" ";
         if (bullet.isActive) {
             GotoXY(bullet.pos.x, bullet.pos.y);
             SetColor(bullet.type == ProjectileType::Player ? Color::LIGHT_RED : Color::LIGHT_YELLOW);
             wcout << L"●";
+            SetColor();
         }
     }
 
-    // 3. 플레이어 그리기
-    GotoXY(player.prevPos.x, player.prevPos.y);
-    wcout << L" ";
-    SetColor(player.IsDashing(state.curTime) ? Color::WHITE : Color::LIGHT_GREEN);
+    if (player.IsDashing(state.curTime)) {
+        SetColor(Color::WHITE);
+    }
+    else if (player.invisibleEndTime > state.curTime) {
+        SetColor(Color::GRAY);
+    }
+    else {
+        SetColor(Color::LIGHT_GREEN);
+    }
     GotoXY(player.pos.x, player.pos.y);
     wcout << L"▲";
 
@@ -279,9 +305,6 @@ void InGameAfterUpdate(GameState& state) {
     }
 }
 
-// =================================================================
-// 6. 플레이어 서브 액션 (대시, 이동, 공격, UI)
-// =================================================================
 void DashPlayer(GameState& state) {
     Player& player = state.inGameData.player;
     if (!player.CanDash(state.curTime)) return;
@@ -294,7 +317,6 @@ void DashPlayer(GameState& state) {
 void PlayerMove(GameState& state) {
     Player& player = state.inGameData.player;
 
-    // 삼항 연산자 우선순위 버그 수정: 전체 조건 나눗셈을 괄호 분리 처리
     int speedDivider = player.IsDashing(state.curTime) ? 2 : 1;
     if (state.curTime < player.lastMoveTime + ((ULONGLONG)player.stats.MoveSpeed / speedDivider)) return;
     if (player.moveDir.x == 0 && player.moveDir.y == 0) return;
@@ -310,7 +332,7 @@ void PlayerMove(GameState& state) {
 
 void PlayerAttack(GameState& state) {
     Player& player = state.inGameData.player;
-    if (GetKey(state.settingData.movementSettingData.SelectKey)) {
+    if (GetKey(state.settingData.movementSettingData.AttackKey)) {
         if (state.curTime >= player.lastAttackTime + (ULONGLONG)player.stats.attackSpeed) {
             Bullet bullet(player.pos, Position{ 0,-1 }, player.stats.attackPower, 20.0f, 3000, ProjectileType::Player);
             bullet.spawnTime = state.curTime;

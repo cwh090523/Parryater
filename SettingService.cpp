@@ -67,7 +67,7 @@ void ChangeControlKey(SettingData& setting, int key)
         move.moveRightArrowKey = key;
         break;
     case 4:
-        move.BombKey = key;
+        move.AttackKey = key;
         break;
     case 5:
         move.dashKey = key;
