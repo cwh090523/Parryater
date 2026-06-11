@@ -74,9 +74,22 @@ struct InGameData
     vector<Bullet> bullets;
 };
 
+struct StageWave {
+    int enemyCount;
+    ULONGLONG spawnInterval;
+    int enemyHp;
+    int enemyMoveSpeed;
+    int enemyAttackSpeed;
+    unique_ptr<Enemy>(*spawner)(Stats, Position);
+};
 struct ShopData {};
-struct StageData {};
-
+struct StageData {
+    int curStage = 1;
+    int curWave = 0;
+    int enemiesRemaining = 0;
+    ULONGLONG lastSpawnTime = 0;
+    vector<StageWave> waves;
+};
 struct GameState
 {
     Scene prevScene = Scene::NONE;
@@ -84,6 +97,7 @@ struct GameState
     bool isRunning = true;
     TitleData titleData;
     SettingData settingData;
+    StageData stageData;
     InGameData inGameData;
     ShopData shopData;
     ULONGLONG curTime = 0;

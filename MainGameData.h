@@ -2,6 +2,8 @@
 #include "enums.h"
 #include <Windows.h>
 #include <vector>
+#include <algorithm>
+#include <memory>
 struct GameState;
 class Enemy;
 class Bullet;
@@ -25,16 +27,18 @@ struct Stats {
     int maxHp = 3;
     int hp = 3;
     int attackPower = 1;
-    int attackSpeed = 50;
-    float MoveSpeed = 1;
+    int attackSpeed = 1500;
+    float MoveSpeed = 300;
     int DashVelocity = 7;
     int DashCooldown = 1500;
-}; class Player {
+};
+
+class Player {
 public:
     ULONGLONG dashStartTime = 0;
     ULONGLONG dashEndTime = 0;
     ULONGLONG dashCooldownEndTime = 0;
-
+    ULONGLONG invisibleEndTime = 0;
     Stats stats;
     Position prevPos = { 0,0 };
     Position pos = { 0,0 };
@@ -52,17 +56,20 @@ public:
         return curTime >= dashCooldownEndTime;
     }
 };
+
 class Enemy {
 public:
     Stats stats;
     Enemy(Stats astat, Position apos) {
         stats = astat;
+        hp = astat.maxHp;
         pos = apos;
+        prevPos = apos;
         floatPos = { static_cast<float>(apos.x), static_cast<float>(apos.y) };
     }
     virtual ~Enemy() {}
     int hp = 10;
-    float MoveSpeed = 0;
+    ULONGLONG lastMoveTime = 0;
     Position prevPos = { 0,0 };
     Position pos = { 0,0 };
     Position moveDir = { 0,0 };
@@ -71,10 +78,27 @@ public:
     virtual void EnemyUpdate(GameState& state) = 0;
 };
 
-class Enmey1 : public Enemy {
+class EnemyRusher : public Enemy {
 public:
-    Enmey1(Stats astat, Position apos);
-    ~Enmey1();
+    EnemyRusher(Stats astat, Position apos);
+    ~EnemyRusher() {}
+    void EnemyUpdate(GameState& state) override;
+};
+
+class EnemyShooter : public Enemy {
+public:
+    EnemyShooter(Stats astat, Position apos);
+    ~EnemyShooter() {}
+    ULONGLONG lastAttackTime = 0;
+    void EnemyUpdate(GameState& state) override;
+};
+
+class EnemyZigzag : public Enemy {
+public:
+    EnemyZigzag(Stats astat, Position apos);
+    ~EnemyZigzag() {}
+    int zigDir = 1;
+    int zigCount = 0;
     void EnemyUpdate(GameState& state) override;
 };
 
