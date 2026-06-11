@@ -67,6 +67,7 @@ void Render(const GameState& state)
 	//	break;
 	case Scene::SETTING:
 		SettingRender(state);
+		break;
 	case Scene::GAMEOVER:
 		break;
 	}

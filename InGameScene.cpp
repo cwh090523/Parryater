@@ -87,7 +87,7 @@ void InGameCollision(GameState& state) {
                 bullet.isActive = false;
                 enemy->stats.hp -= player.stats.attackPower;
                 if (enemy->stats.hp <= 0) {
-                    enemy->isAlive == false;
+                    enemy->isAlive = false;
                     state.inGameData.score += 100;
                 }
                 break;
@@ -100,6 +100,7 @@ void InGameCollision(GameState& state) {
         if (abs(enemy->pos.x - player.pos.x) <= 1 && enemy->pos.y == player.pos.y) {
             if (!player.IsDashing(state.curTime)) {
                 player.stats.hp--;
+                ShakeConsoleWindow(5, 50, 25);
                 if (player.stats.hp <= 0) {
                     state.inGameData.isGameOver = true;
                 }
@@ -107,8 +108,9 @@ void InGameCollision(GameState& state) {
             }
             else {
                 enemy->stats.hp -= player.stats.attackPower;
+                ShakeConsoleWindow(10, 100, 25);
                 if (enemy->stats.hp <= 0) {
-                    enemy->isAlive == false;
+                    enemy->isAlive = false;
                     state.inGameData.score += 100;
                 }
             }
@@ -266,9 +268,7 @@ void RenderUI(const GameState& state) {
     GotoXY(UI_X, 7);
     cout << "1";
 
-    GotoXY(UI_X, 10);
-    SetColor(Color::LIGHT_YELLOW);
-    
+    DrawBar(UI_X,10,"HP",0,10,10);
     GotoXY(UI_X, 14);
     SetColor(Color::LIGHT_YELLOW);
     cout << "STATS";
