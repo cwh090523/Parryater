@@ -42,6 +42,7 @@ int main()
 		}
 		switch (state.curScene)
 		{
+
 		case Scene::TITLE:
 			UpdateTitle(state);
 			RenderTitle(state);
