@@ -268,14 +268,7 @@ void RenderUI(const GameState& state) {
 
     GotoXY(UI_X, 10);
     SetColor(Color::LIGHT_YELLOW);
-    cout << "HP";
-    SetColor(Color::LIGHT_RED);
-    GotoXY(UI_X, 11);
-    string hp = "";
-    for (int i = 0; i < player.stats.maxHp; ++i)
-        hp += (i < player.stats.hp) ? "♥ " : "♡ ";
-    cout << hp;
-
+    
     GotoXY(UI_X, 14);
     SetColor(Color::LIGHT_YELLOW);
     cout << "STATS";
