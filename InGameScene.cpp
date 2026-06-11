@@ -79,7 +79,22 @@ void InGameCollision(GameState& state) {
 
     for (Bullet& bullet : state.inGameData.bullets) {
         if (!bullet.isActive) continue;
-        if (bullet.type != ProjectileType::Player) continue;
+        if (bullet.type != ProjectileType::Player) {
+            if (abs(bullet.pos.x - player.pos.x) <= 1 && bullet.pos.y == player.pos.y) {
+                if (!player.IsDashing(state.curTime)) {
+                    player.stats.hp -= bullet.damage;
+                    ShakeConsoleWindow(5, 50, 25);
+                    if (player.stats.hp <= 0) {
+                        state.inGameData.isGameOver = true;
+                    }
+
+                }
+                else {
+                    ShakeConsoleWindow(10, 100, 25);
+                    bullet.isActive = false;
+                }
+            }
+        }
 
         for (auto& enemy : state.inGameData.enemies) {
             if (!enemy->isAlive) continue;
@@ -227,13 +242,12 @@ void DashPlayer(GameState& state) {
 void PlayerMove(GameState& state) {
     Player& player = state.inGameData.player;
 
-    if (state.curTime < player.lastMoveTime + (ULONGLONG)player.stats.MoveSpeed) return;
+    if (state.curTime < player.lastMoveTime + (ULONGLONG)player.stats.MoveInterval / player.IsDashing(state.curTime) ? 2 : 1) return;
     if (player.moveDir.x == 0 && player.moveDir.y == 0) return;
 
-    int speed = player.IsDashing(state.curTime) ? 2 : 1;
 
-    player.pos.x += player.moveDir.x * 2 * speed;
-    player.pos.y += player.moveDir.y * speed;
+    player.pos.x += player.moveDir.x * 2;
+    player.pos.y += player.moveDir.y;
 
     player.pos.x = std::max(0, std::min(player.pos.x, GAME_WIDTH - 1));
     player.pos.y = std::max(0, std::min(player.pos.y, HEIGHT - 1));

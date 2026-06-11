@@ -28,7 +28,7 @@ struct Stats {
     int hp = 3;
     int attackPower = 1;
     int attackSpeed = 1500;
-    float MoveSpeed = 300;
+    float MoveInterval = 300;
     int DashVelocity = 7;
     int DashCooldown = 1500;
 };
