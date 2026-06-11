@@ -242,7 +242,7 @@ void DashPlayer(GameState& state) {
 void PlayerMove(GameState& state) {
     Player& player = state.inGameData.player;
 
-    if (state.curTime < player.lastMoveTime + (ULONGLONG)player.stats.MoveInterval / player.IsDashing(state.curTime) ? 2 : 1) return;
+    if (state.curTime < player.lastMoveTime + (1000 / (ULONGLONG)player.stats.MoveSpeed) / player.IsDashing(state.curTime) ? 2 : 1) return;
     if (player.moveDir.x == 0 && player.moveDir.y == 0) return;
 
 
