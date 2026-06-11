@@ -4,6 +4,7 @@
 
 #include "SettingService.h"
 #include "KeyUtil.h"
+#include "SettingStorage.h"
 
 void SettingInit(GameState& state)
 {
@@ -41,10 +42,16 @@ void SettingUpdate(GameState& state)
 				MoveSettingSelectIndex(setting, 1, 1);
 
 			if (GetKeyDown(VK_LEFT))
+			{
 				ChangeSettingVolume(setting, -1);
+				SaveSettings(setting);
+			}
 
 			if (GetKeyDown(VK_RIGHT))
+			{
 				ChangeSettingVolume(setting, 1);
+				SaveSettings(setting);
+			}
 		}
 
 		else if (setting.curMenu == SettingsMenu::CONTROLS)
@@ -63,6 +70,7 @@ void SettingUpdate(GameState& state)
 						break;
 
 					ChangeControlKey(setting, key);
+					SaveSettings(setting);
 					break;
 				}
 			}
@@ -89,6 +97,7 @@ void SettingUpdate(GameState& state)
 			break;
 
 		case SettingsMenu::RESET:
+			SaveSettings(setting);
 			ResetSettingData(setting);
 			break;
 
@@ -172,7 +181,7 @@ void SettingRender(const GameState& state)
 	}
 
 	const string labels[] =
-	{	
+	{
 		"소리                ",
 		"조작                ",
 		"초기화              ",

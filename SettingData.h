@@ -11,7 +11,7 @@ struct MovementSettingData
     int moveLeftArrowKey = 'A';
     int moveRightArrowKey = 'D';
 
-    int AttackKey = 'Q';
+    int attackKey = 'Q';
     int dashKey = VK_SPACE;
 };
 
