@@ -14,6 +14,7 @@ constexpr int HEIGHT = 45;
 constexpr int GAME_WIDTH = 110;
 constexpr int UI_X = 113;
 
+
 struct TitleData
 {
     Menu curMenu = Menu::START;
