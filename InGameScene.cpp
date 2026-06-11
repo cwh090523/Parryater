@@ -300,7 +300,7 @@ void RenderUI(const GameState& state) {
 
 void PlayerAttack(GameState& state) {
     Player& player = state.inGameData.player;
-    if (GetKey(state.settingData.movementSettingData.SelectKey)) {
+    if (GetKey(state.settingData.movementSettingData.attackKey)) {
         if (state.curTime >= player.lastAttackTime + (ULONGLONG)player.stats.attackSpeed) {
             Bullet bullet(player.pos, Position{ 0,-1 }, player.stats.attackPower, 20.0f, 3000, ProjectileType::Player);
             bullet.spawnTime = state.curTime;
