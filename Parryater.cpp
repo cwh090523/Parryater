@@ -10,6 +10,7 @@ int main()
 {
 	GameState state;
 	SetConsoleSize(WIDTH, HEIGHT);
+	SetConsoleMouseInputDisabled();
 	SetConsoleWindowStyle(true);
 	SetcursorVisble(false);
 	srand(time(nullptr));
