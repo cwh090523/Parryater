@@ -9,18 +9,16 @@
 int main()
 {
 	GameState state;
-	TitleData title;
 	SetConsoleSize(WIDTH, HEIGHT);
 	SetConsoleWindowStyle(true);
 	SetcursorVisble(false);
-	InitTitle(state);
 	srand(time(nullptr));
-	while (true)
+	while (state.isRunning)
 	{
 
-	FrameSync(100);
-	state.curTime = GetTickCount64();
-	UpdateInput();
+		FrameSync(100);
+		state.curTime = GetTickCount64();
+		UpdateInput();
 		if (state.prevScene != state.curScene) {
 			switch (state.curScene)
 			{
@@ -44,28 +42,29 @@ int main()
 		}
 		switch (state.curScene)
 		{
-			case Scene::TITLE:
-				UpdateTitle(state);
-				RenderTitle(state);
-			break;
-			case Scene::SETTING: // 완벽 미구현
-				SettingUpdate(state);
-				SettingRender(state);
-				break;
-			case Scene::INGAME:
-				InGameUpdate(state);
-				InGameRender(state);
 
-				InGameAfterUpdate(state);
-				break;
-			case Scene::SHOP: // 완벽 미구현
-				ShopUpdate(state);
-				ShopRender(state);
-				break;
-			case Scene::GAMEOVER:// 완벽 미구현
-				GameOverUpdate(state);
-				GameOverRender(state);
-				break;
+		case Scene::TITLE:
+			UpdateTitle(state);
+			RenderTitle(state);
+			break;
+		case Scene::SETTING: // 완벽 미구현
+			SettingUpdate(state);
+			SettingRender(state);
+			break;
+		case Scene::INGAME:
+			InGameUpdate(state);
+			InGameRender(state);
+
+			InGameAfterUpdate(state);
+			break;
+		case Scene::SHOP: // 완벽 미구현
+			ShopUpdate(state);
+			ShopRender(state);
+			break;
+		case Scene::GAMEOVER:// 완벽 미구현
+			GameOverUpdate(state);
+			GameOverRender(state);
+			break;
 
 		}
 

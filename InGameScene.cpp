@@ -128,10 +128,10 @@ void InGameUpdate(GameState& state) {
     player.lastMoveDir = player.moveDir;
     player.moveDir = { 0, 0 };
 
-    if (GetKey(msd.moveUpKey) || GetKey(msd.moveUpArrowKey))    player.moveDir.y = -1;
-    if (GetKey(msd.moveDownKey) || GetKey(msd.moveDownArrowKey))  player.moveDir.y = 1;
-    if (GetKey(msd.moveLeftKey) || GetKey(msd.moveLeftArrowKey))  player.moveDir.x = -1;
-    if (GetKey(msd.moveRightKey) || GetKey(msd.moveRightArrowKey)) player.moveDir.x = 1;
+    if (GetKey(msd.moveUpArrowKey) || GetKey(msd.moveUpArrowKey))    player.moveDir.y = -1;
+    if (GetKey(msd.moveDownArrowKey) || GetKey(msd.moveDownArrowKey))  player.moveDir.y = 1;
+    if (GetKey(msd.moveLeftArrowKey) || GetKey(msd.moveLeftArrowKey))  player.moveDir.x = -1;
+    if (GetKey(msd.moveRightArrowKey) || GetKey(msd.moveRightArrowKey)) player.moveDir.x = 1;
     if (GetKeyDown(msd.dashKey)) DashPlayer(state);
 
     PlayerMove(state);

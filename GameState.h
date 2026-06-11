@@ -5,10 +5,12 @@
 #include <memory>
 #include "Enums.h"
 #include "MainGameData.h"
+#include "SettingData.h"
 
 
 constexpr int WIDTH = 160;
 constexpr int HEIGHT = 45;
+
 constexpr int GAME_WIDTH = 110;
 constexpr int UI_X = 113;
 struct MovementSettingData
@@ -102,3 +104,4 @@ struct GameState
     ShopData shopData;
     ULONGLONG curTime = 0;
 };
+
