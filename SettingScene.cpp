@@ -1,83 +1,193 @@
 #include "SettingScene.h"
-#include "TitleScene.h"
 #include "GameState.h"
-#include "AsciiArt.h"
+#include "Console.h"
 
-static AsciiObjs objs;
-void SettingInit(GameState& state) {
+#include "SettingService.h"
+#include "KeyUtil.h"
+
+void SettingInit(GameState& state)
+{
 	system("cls");
+	state.settingData.curMenu = SettingsMenu::VOLUME;
+	state.settingData.isSelected = false;
+	state.settingData.selectIndex = 0;
 }
 
-void SettingUpdate(GameState& state) {
-	if (GetKeyDown(VK_ESCAPE)) {
-		state.curScene = Scene::TITLE;
+void SettingUpdate(GameState& state)
+{
+	SettingData& setting = state.settingData;
+
+	if (GetKeyDown(VK_ESCAPE))
+	{
+		if (setting.isSelected) {
+
+			system("cls");
+			ExitSettingSubMenu(setting);
+		}
+		else
+			state.curScene = Scene::TITLE;
+
+		return;
 	}
-	AsciiUpdate(objs);
+
+	if (setting.isSelected)
+	{
+		if (setting.curMenu == SettingsMenu::VOLUME)
+		{
+			if (GetKeyDown(VK_UP))
+				MoveSettingSelectIndex(setting, -1, 1);
+
+			if (GetKeyDown(VK_DOWN))
+				MoveSettingSelectIndex(setting, 1, 1);
+
+			if (GetKeyDown(VK_LEFT))
+				ChangeSettingVolume(setting, -1);
+
+			if (GetKeyDown(VK_RIGHT))
+				ChangeSettingVolume(setting, 1);
+		}
+
+		else if (setting.curMenu == SettingsMenu::CONTROLS)
+		{
+			if (GetKeyDown(VK_UP))
+				MoveSettingSelectIndex(setting, -1, 5);
+
+			if (GetKeyDown(VK_DOWN))
+				MoveSettingSelectIndex(setting, 1, 5);
+
+			for (int key = 0; key < 256; ++key)
+			{
+				if (GetKeyDown(key))
+				{
+					if (key == VK_UP || key == VK_DOWN || key == VK_ESCAPE)
+						break;
+
+					ChangeControlKey(setting, key);
+					break;
+				}
+			}
+		}
+
+		return;
+	}
+
 	if (GetKeyDown(VK_UP))
-	{
-		state.settingData.curMenu = (SettingsMenu)std::max((int)SettingsMenu::VOLUME, (int)state.settingData.curMenu - 1);
-	}
+		MoveSettingMenu(setting, -1);
+
 	if (GetKeyDown(VK_DOWN))
-	{
-		state.settingData.curMenu = (SettingsMenu)std::min((int)SettingsMenu::BACK, (int)state.settingData.curMenu + 1);
-	}
+		MoveSettingMenu(setting, 1);
 
 	if (GetKeyDown(VK_SPACE) || GetKeyDown(VK_RETURN))
 	{
-		switch (state.settingData.curMenu)
+		switch (setting.curMenu)
 		{
 		case SettingsMenu::VOLUME:
-			state.settingData.curMenu = SettingsMenu::VOLUME;
-			state.settingData.SelectMenu();
-			break;
+			system("cls");
 		case SettingsMenu::CONTROLS:
-			state.settingData.curMenu = SettingsMenu::CONTROLS;
-			state.settingData.SelectMenu();
+			system("cls");
+			EnterSettingSubMenu(setting);
 			break;
+
 		case SettingsMenu::RESET:
-			state.settingData.curMenu = SettingsMenu::RESET;
-			state.settingData.SelectMenu();
+			ResetSettingData(setting);
 			break;
-		case SettingsMenu::BACK: 
+
+		case SettingsMenu::BACK:
+			system("cls");
 			state.curScene = Scene::TITLE;
 			break;
 		}
 	}
 }
 
-void SettingRender(const GameState& state) {
+void SettingRender(const GameState& state)
+{
+	const SettingData& setting = state.settingData;
+	const MovementSettingData& move = setting.movementSettingData;
 
-	// 화면 중앙에 출력
 	COORD res = GetConsoleResolution();
-	int cx = res.X / 2 - 4;
-	int cy = res.Y / 3 * 2;
+	int cx = res.X / 2 - 12;
+	int cy = res.Y / 3;
 
-	const string labels[] = { "사운드", "조작", "초기화", "돌아가기"};
-	for (int i = 0;i < 4; ++i) {
-		GotoXY(cx - 2, cy + i);
-		cout << (i == (int)state.settingData.curMenu ? ">" : " ") << " " << labels[i];
+	GotoXY(cx, cy - 2);
+	SetColor(Color::LIGHT_YELLOW);
+	cout << "[ 설정 ]";
+	SetColor();
+
+	if (setting.isSelected && setting.curMenu == SettingsMenu::VOLUME)
+	{
+		GotoXY(cx, cy);
+		cout << (setting.selectIndex == 0 ? "> " : "  ");
+		cout << "BGM : " << (int)(setting.bgmVolume * 100) << "%  ";
+
+		GotoXY(cx, cy + 1);
+		cout << (setting.selectIndex == 1 ? "> " : "  ");
+		cout << "SFX : " << (int)(setting.sfxVolume * 100) << "%   ";
+
+		GotoXY(cx, cy + 4);
+		cout << "UP/DOWN    : 선택";
+		GotoXY(cx, cy + 5);
+		cout << "LEFT/RIGHT : 변경";
+		GotoXY(cx, cy + 6);
+		cout << "ESC        : 돌아가기";
+		return;
 	}
 
-	//const string infoLabels[] =
-	//{
-	//	"[ 조작 방법 ]",
-	//	"WASD/방향키 : 이동",
-	//	"SPACE	    : 대쉬",
-	//	"E			: 공격",
-	//	"Enter		: 선택",
-	//	"ESC 로 돌아가기"
-	//};
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	GotoXY(cx - 6, cy + i);
-	//	if (i == 0)
-	//		SetColor(Color::LIGHT_YELLOW);
-	//	else if (i == 4)
-	//		SetColor(Color::LIGHT_GRAY);
-	//	else
-	//		SetColor();
-	//	cout << infoLabels[i];
-	//}
+	if (setting.isSelected && setting.curMenu == SettingsMenu::CONTROLS)
+	{
+		const string labels[] =
+		{
+			"Move Up    : ",
+			"Move Down  : ",
+			"Move Left  : ",
+			"Move Right : ",
+			"Attack     : ",
+			"Dash       : "
+		};
+
+		const string keys[] =
+		{
+			KeyToString(move.moveUpArrowKey),
+			KeyToString(move.moveDownArrowKey),
+			KeyToString(move.moveLeftArrowKey),
+			KeyToString(move.moveRightArrowKey),
+			KeyToString(move.BombKey),
+			KeyToString(move.dashKey)
+		};
+
+		for (int i = 0; i < 6; ++i)
+		{
+			GotoXY(cx, cy + i);
+			cout << (setting.selectIndex == i ? "> " : "  ");
+			cout << labels[i] << keys[i] << "     ";
+		}
+
+		GotoXY(cx, cy + 8);
+		cout << "UP/DOWN : 선택";
+		GotoXY(cx, cy + 9);
+		cout << "키를 눌러 변경하기";
+		GotoXY(cx, cy + 10);
+		cout << "ESC : 돌아가기";
+		return;
+	}
+
+	const string labels[] =
+	{	
+		"소리                ",
+		"조작                ",
+		"초기화              ",
+		"돌아가기            "
+	};
+
+	for (int i = 0; i < 4; ++i)
+	{
+		GotoXY(cx, cy + i);
+		cout << (i == (int)setting.curMenu ? "> " : "  ");
+		cout << labels[i];
+	}
+
+	GotoXY(cx, cy + 6);
+	cout << "ENTER / SPACE : 선택";
+	GotoXY(cx, cy + 7);
+	cout << "ESC : 돌아가기";
 }
-
-
