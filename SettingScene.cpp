@@ -120,24 +120,27 @@ void SettingRender(const GameState& state)
 
 	GotoXY(cx, cy - 2);
 	SetColor(Color::LIGHT_YELLOW);
-	cout << "[ 설정 ]";
+	cout << "| 설정 |";
+
+
+
 	SetColor();
 
 	if (setting.isSelected && setting.curMenu == SettingsMenu::VOLUME)
 	{
-		GotoXY(cx, cy);
+		GotoXY(cx, cy+ 1);
 		cout << (setting.selectIndex == 0 ? "> " : "  ");
 		cout << "BGM : " << (int)(setting.bgmVolume * 100) << "%  ";
 
-		GotoXY(cx, cy + 1);
+		GotoXY(cx, cy + 2);
 		cout << (setting.selectIndex == 1 ? "> " : "  ");
 		cout << "SFX : " << (int)(setting.sfxVolume * 100) << "%   ";
 
-		GotoXY(cx, cy + 4);
-		cout << "UP/DOWN    : 선택";
 		GotoXY(cx, cy + 5);
-		cout << "LEFT/RIGHT : 변경";
+		cout << "UP/DOWN    : 선택";
 		GotoXY(cx, cy + 6);
+		cout << "LEFT/RIGHT : 변경";
+		GotoXY(cx, cy + 7);
 		cout << "ESC        : 돌아가기";
 		return;
 	}
@@ -190,7 +193,7 @@ void SettingRender(const GameState& state)
 
 	for (int i = 0; i < 4; ++i)
 	{
-		GotoXY(cx, cy + i);
+		GotoXY(cx, cy + i+1);
 		cout << (i == (int)setting.curMenu ? "> " : "  ");
 		cout << labels[i];
 	}

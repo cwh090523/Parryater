@@ -6,30 +6,41 @@ void AsciiInit(AsciiObjs& objs)
 	objs.plane =
 	{
 	   "        _        ",
-	   "      -= \`\     ",
-	   "  | \ ____\_\__  ",
-	   "-= \c`""""""" "`)",
-	   "   `~~~~~/ /~~`  ",
+	   "      -= \\`\\     ",
+	   "  | \\ ____\\_\\__  ",
+	   "-= \\c`          `>",
+	   "   `~~~~~/ /~~` ",
 	   "     -= = / /    ",
 	   "       '-'       ",
 	};
 
 	objs.cloud =
 	{
-	 "      _  _       ",
-	 "    ( `   )_     ",
-	 "   (    )    `)  ",
-	 " (_   (_ .  _) _)",
+	 "      _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _       ",
+	 "    ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_     ",
+	 "   (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)  ",
+	 " (_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)",
+	};
+	objs.cloud2 =
+	{
+	 "      _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _            _  _       ",
+	 "    ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_        ( `   )_     ",
+	 "   (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)    (    )    `)  ",
+	 " (_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)(_   (_ .  _) _)",
 	};
 	for (string& line : objs.plane)
 		line.resize(WIDTH, ' ');
 	for (string& line : objs.cloud)
+		line.resize(WIDTH, ' ');
+	for (string& line : objs.cloud2)
 		line.resize(WIDTH, ' ');
 }
 
 void AsciiUpdate(AsciiObjs& objs)
 {
 	for (string& line : objs.cloud)
+		std::rotate(line.begin(), line.begin() + 1, line.end());
+	for (string& line : objs.cloud2)
 		std::rotate(line.begin(), line.begin() + 1, line.end());
 	for (string& line : objs.plane)
 		std::rotate(line.rbegin(), line.rbegin() + 1, line.rend());
@@ -40,6 +51,7 @@ void AsciiRender(const AsciiObjs& objs)
 {
 	int planeLines = (int)objs.plane.size();
 	int cloudLines = (int)objs.cloud.size();
+	int cloud2Lines = (int)objs.cloud2.size();
 	COORD res = GetConsoleResolution();
 
 	SetColor(Color::LIGHT_YELLOW);
@@ -53,6 +65,11 @@ void AsciiRender(const AsciiObjs& objs)
 	for (int i = 0; i < cloudLines; ++i)
 	{
 		GotoXY(0, planeLines + i);
+		cout << objs.cloud[i];
+	}
+	for (int i = 0; i < cloud2Lines; ++i)
+	{
+		GotoXY(0, (cloudLines+ i)*9);
 		cout << objs.cloud[i];
 	}
 	SetColor();

@@ -8,6 +8,7 @@ using std::string;
 struct AsciiObjs {
 	vector<string> plane;
 	vector<string> cloud;
+	vector<string> cloud2;
 };
 
 void AsciiInit(AsciiObjs& objs);
