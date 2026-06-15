@@ -16,47 +16,76 @@ void StageInit(GameState& state) {
     state.stageData.curWave = 0;
     state.stageData.enemiesRemaining = 0;
     state.stageData.lastSpawnTime = state.curTime;
-    state.stageData.waves = {
-        {  5, 1500, 3, 300, 2000, SpawnRusher  },
-        {  5, 1200, 3, 280, 1800, SpawnZigzag  },
-        {  8, 1000, 5, 250, 1500, SpawnShooter },
-        {  8,  900, 5, 240, 1400, SpawnRusher  },
-        { 10,  700, 8, 200, 1000, SpawnZigzag  },
-        { 10,  600, 8, 180,  900, SpawnShooter },
-    };
-    state.stageData.enemiesRemaining = state.stageData.waves[0].enemyCount;
+    state.stageData.waves.clear();
+
+    StageWave wave1;
+    wave1.data.push_back(WaveEnemyData{
+        15,            // enemyCount
+        1500,           // spawnInterval
+        3,             // enemyHp
+        200,           // enemyMoveSpeed
+        1000,          // enemyAttackSpeed
+        SpawnRusher,    // 함수 포인터
+        5, //spawncount
+        });
+    wave1.data.push_back(WaveEnemyData{
+    5,            // enemyCount
+    1500,           // spawnInterval
+    2,             // enemyHp
+    200,           // enemyMoveSpeed
+    1000,          // enemyAttackSpeed
+    SpawnZigzag,    // 함수 포인터
+    5, //spawncount
+        });
+    state.stageData.waves.push_back(wave1);
+    state.stageData.waves.emplace_back(); 
+    state.stageData.waves.emplace_back();
 }
 
 void StageUpdate(GameState& state) {
     StageData& sd = state.stageData;
+
     if (sd.curWave >= (int)sd.waves.size()) return;
 
     StageWave& wave = sd.waves[sd.curWave];
 
-    if (sd.enemiesRemaining <= 0 && state.inGameData.enemies.empty()) {
-        sd.curWave++;
-        if (sd.curWave >= (int)sd.waves.size()) return;
-        wave = sd.waves[sd.curWave];
-        sd.enemiesRemaining = wave.enemyCount;
+
+    if (sd.curWaveEnemyDataNumber >= (int)wave.data.size()) {
+        if (state.inGameData.enemies.empty()) {
+            sd.curWave++;
+            sd.curWaveEnemyDataNumber = 0;
+            sd.enemiesRemaining = 0;
+            sd.lastSpawnTime = state.curTime;
+        }
+        return;
     }
 
-    if (sd.enemiesRemaining <= 0) return;
-    if (state.curTime < sd.lastSpawnTime + wave.spawnInterval) return;
+    WaveEnemyData& currentData = wave.data[sd.curWaveEnemyDataNumber];
 
-    Stats estat;
-    estat.maxHp = wave.enemyHp;
-    estat.hp = wave.enemyHp;
-    estat.MoveSpeed = (float)wave.enemyMoveSpeed;
-    estat.attackSpeed = wave.enemyAttackSpeed;
-    estat.attackPower = 1;
+    if (sd.enemiesRemaining == 0) {
+        sd.enemiesRemaining = currentData.enemyCount;
+    }
 
-    int spawnX = (rand() % (GAME_WIDTH / 2)) * 2 - 1;
-    auto enemy = wave.spawner(estat, Position{ spawnX, 0 });
-    enemy->lastMoveTime = state.curTime;
-    state.inGameData.enemies.push_back(std::move(enemy));
+    if (state.curTime >= sd.lastSpawnTime + currentData.spawnInterval) {
 
-    sd.enemiesRemaining--;
-    sd.lastSpawnTime = state.curTime;
+        Stats estat;
+        estat.maxHp = currentData.enemyHp;
+        estat.hp = currentData.enemyHp;
+        estat.MoveSpeed = (float)currentData.enemyMoveSpeed;
+        estat.attackSpeed = currentData.enemyAttackSpeed;
+        estat.attackPower = 1;
+
+        int spawnX = (rand() % (GAME_WIDTH / 2)) * 2 - 1;
+        auto enemy = currentData.spawner(estat, Position{ spawnX, 0 });
+        enemy->lastMoveTime = state.curTime;
+        state.inGameData.enemies.push_back(std::move(enemy));
+
+        sd.enemiesRemaining--;
+        sd.lastSpawnTime = state.curTime;
+        if (sd.enemiesRemaining <= 0) {
+            sd.curWaveEnemyDataNumber++;
+        }
+    }
 }
 
 void InGameInit(GameState& state) {
@@ -226,16 +255,21 @@ void InGameUpdate(GameState& state) {
         else {
             ++iter;
         }
-    }
-
-    auto iter2 = state.inGameData.enemies.begin();
+    }auto iter2 = state.inGameData.enemies.begin();
     while (iter2 != state.inGameData.enemies.end()) {
         if ((*iter2)->isAlive) {
             ++iter2;
         }
         else {
-            GotoXY((*iter2)->prevPos.x, (*iter2)->prevPos.y); cout << " ";
-            GotoXY((*iter2)->pos.x, (*iter2)->pos.y);         cout << " ";
+            
+            auto ClearPos = [](Position p) {
+                if (p.x >= 0 && p.x < GAME_WIDTH && p.y >= 0 && p.y < HEIGHT) {
+                    GotoXY(p.x, p.y); cout << " ";
+                }
+                };
+            ClearPos((*iter2)->prevPos);
+            ClearPos((*iter2)->pos);
+
             iter2 = state.inGameData.enemies.erase(iter2);
         }
     }
@@ -259,17 +293,26 @@ void InGameRender(const GameState& state) {
     }
     GotoXY(player.prevPos.x, player.prevPos.y);
     wcout << L" ";
+    for (const auto& enemy : state.inGameData.enemies) {
+        if (!enemy->isAlive) continue;
+        if (enemy->prevPos.x >= 0 && enemy->prevPos.x < GAME_WIDTH &&
+            enemy->prevPos.y >= 0 && enemy->prevPos.y < HEIGHT) {
+            GotoXY(enemy->prevPos.x, enemy->prevPos.y);
+            wcout << L" ";
+        }
+    }
 
     for (const auto& enemy : state.inGameData.enemies) {
         if (!enemy->isAlive) continue;
-        GotoXY(enemy->pos.x, enemy->pos.y);
-        if (dynamic_cast<EnemyShooter*>(enemy.get()))     SetColor(Color::SKYBLUE);
-        else if (dynamic_cast<EnemyZigzag*>(enemy.get())) SetColor(Color::YELLOW);
-        else                                              SetColor(Color::RED);
-        wcout << L"▼";
-        SetColor();
+        if (enemy->pos.x >= 0 && enemy->pos.x < GAME_WIDTH &&
+            enemy->pos.y >= 0 && enemy->pos.y < HEIGHT) {
+            GotoXY(enemy->pos.x, enemy->pos.y);
+            if (dynamic_cast<EnemyShooter*>(enemy.get()))     SetColor(Color::SKYBLUE);
+            else if (dynamic_cast<EnemyZigzag*>(enemy.get())) SetColor(Color::YELLOW);
+            else                                              SetColor(Color::RED);
+            wcout << L"▼";
+        }
     }
-
     for (const Bullet& bullet : state.inGameData.bullets) {
         if (bullet.isActive) {
             GotoXY(bullet.pos.x, bullet.pos.y);
@@ -317,7 +360,7 @@ void DashPlayer(GameState& state) {
 void PlayerMove(GameState& state) {
     Player& player = state.inGameData.player;
 
-    int speedDivider = player.IsDashing(state.curTime) ? 2 : 1;
+    int speedDivider = player.IsDashing(state.curTime) ? 3 : 1;
     if (state.curTime < player.lastMoveTime + ((ULONGLONG)player.stats.MoveSpeed / speedDivider)) return;
     if (player.moveDir.x == 0 && player.moveDir.y == 0) return;
 

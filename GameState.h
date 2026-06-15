@@ -29,19 +29,26 @@ struct InGameData
     vector<unique_ptr<Enemy>> enemies;
     vector<Bullet> bullets;
 };
+struct WaveEnemyData {
 
-struct StageWave {
     int enemyCount;
     ULONGLONG spawnInterval;
     int enemyHp;
     int enemyMoveSpeed;
     int enemyAttackSpeed;
     unique_ptr<Enemy>(*spawner)(Stats, Position);
+    int spawnCount;
+};
+struct StageWave {
+    vector<WaveEnemyData> data;
+    StageWave() = default;
+    StageWave(initializer_list<WaveEnemyData> init) : data(init) {}
 };
 struct ShopData {};
 struct StageData {
     int curStage = 1;
     int curWave = 0;
+    int curWaveEnemyDataNumber = 0;
     int enemiesRemaining = 0;
     ULONGLONG lastSpawnTime = 0;
     vector<StageWave> waves;
