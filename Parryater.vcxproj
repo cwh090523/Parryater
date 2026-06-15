@@ -141,6 +141,7 @@
     <ClCompile Include="SettingService.cpp" />
     <ClCompile Include="SettingStorage.cpp" />
     <ClCompile Include="ShopScene.cpp" />
+    <ClCompile Include="StageSetting.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="SettingService.h" />
     <ClInclude Include="SettingStorage.h" />
     <ClInclude Include="ShopScene.h" />
+    <ClInclude Include="StageSetting.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

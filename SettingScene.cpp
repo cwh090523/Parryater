@@ -160,7 +160,7 @@ void SettingRender(const GameState& state)
 			KeyToString(move.moveDownArrowKey),
 			KeyToString(move.moveLeftArrowKey),
 			KeyToString(move.moveRightArrowKey),
-			KeyToString(move.AttackKey),
+			KeyToString(move.attackKey),
 			KeyToString(move.dashKey)
 		};
 
