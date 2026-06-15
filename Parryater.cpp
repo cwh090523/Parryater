@@ -6,6 +6,7 @@
 #include "enums.h"
 #include "Console.h"
 #include "GameState.h"
+#include "SettingStorage.h"
 int main()
 {
 	GameState state;
@@ -13,6 +14,7 @@ int main()
 	SetConsoleMouseInputDisabled();
 	SetConsoleWindowStyle(true);
 	SetcursorVisble(false);
+	LoadSettings(state.settingData);
 	srand(time(nullptr));
 	while (state.isRunning)
 	{
@@ -48,7 +50,7 @@ int main()
 			UpdateTitle(state);
 			RenderTitle(state);
 			break;
-		case Scene::SETTING: // 완벽 미구현
+		case Scene::SETTING:
 			SettingUpdate(state);
 			SettingRender(state);
 			break;
