@@ -9,6 +9,7 @@ void InitTitle(GameState& state)
 	AsciiInit(objs);
 	MatrixAnimation("Parryater ", 40, 50);
 	system("cls");
+	state.inGameData.isGamming = false;
 
 }
 void UpdateTitle(GameState& state)

@@ -17,6 +17,7 @@ void InGameInit(GameState& state) {
 
     state.inGameData.enemies.clear();
     state.inGameData.bullets.clear();
+    if (!state.inGameData.isGamming) {
 
     state.inGameData.player.stats.maxHp = 10;
     state.inGameData.player.stats.hp = 10;
@@ -29,6 +30,9 @@ void InGameInit(GameState& state) {
     state.inGameData.player.lastMoveTime = state.curTime;
     state.inGameData.player.lastAttackTime = state.curTime;
     state.inGameData.player.invisibleEndTime = 0;
+    state.inGameData.isGamming = true;
+
+    }
 
     StageInit(state);
 }
@@ -77,9 +81,12 @@ void InGameCollision(GameState& state) {
             int maxBulletY = max(bullet.prevPos.y, bullet.pos.y);
 
             if (maxBulletX >= minPlayerX && minBulletX <= maxPlayerX && maxBulletY >= minPlayerY && minBulletY <= maxPlayerY) {
-                bullet.isActive = false;
                 if (player.IsDashing(state.curTime)) {
                     ShakeConsoleWindow(15, 45, 15);
+                    bullet.moveDir.x *=-1;
+                    bullet.moveDir.y *=-1;
+                    bullet.type = ProjectileType::Player;
+
                     player.invisibleEndTime = state.curTime + 800;
                     player.dashCooldownEndTime = state.curTime;
                     state.inGameData.score += 200;
@@ -87,6 +94,7 @@ void InGameCollision(GameState& state) {
                     state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
                 }
                 else if (!playerInvincible) {
+                bullet.isActive = false;
                     player.stats.hp -= bullet.damage;
                     player.invisibleEndTime = state.curTime + 500;
                     ShakeConsoleWindow(5, 50, 25);
