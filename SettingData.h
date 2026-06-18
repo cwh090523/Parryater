@@ -3,7 +3,6 @@
 
 #include <Windows.h>
 #include "Enums.h"
-
 struct MovementSettingData
 {
     int moveUpArrowKey = 'W';
@@ -18,12 +17,12 @@ struct MovementSettingData
 struct SettingData
 {
     SettingsMenu curMenu = SettingsMenu::VOLUME;
-
     bool isSelected = false;
     int selectIndex = 0;
 
     float bgmVolume = 0.5f;
     float sfxVolume = 0.5f;
-
     MovementSettingData movementSettingData;
+
+    Scene returnScene = Scene::TITLE;
 };

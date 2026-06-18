@@ -5,6 +5,7 @@
 #include "SettingService.h"
 #include "KeyUtil.h"
 #include "SettingStorage.h"
+#include "SoundManager.h"
 
 void SettingInit(GameState& state)
 {
@@ -26,7 +27,10 @@ void SettingUpdate(GameState& state)
 			ExitSettingSubMenu(setting);
 		}
 		else
-			state.curScene = Scene::TITLE;
+		{
+			system("cls");
+			state.curScene = setting.returnScene;
+		}
 
 		return;
 	}
@@ -44,12 +48,20 @@ void SettingUpdate(GameState& state)
 			if (GetKeyDown(VK_LEFT))
 			{
 				ChangeSettingVolume(setting, -1);
+
+				SOUND->SetBGMVolume(setting.bgmVolume);
+				SOUND->SetSFXVolume(setting.sfxVolume);
+
 				SaveSettings(setting);
 			}
 
 			if (GetKeyDown(VK_RIGHT))
 			{
 				ChangeSettingVolume(setting, 1);
+
+				SOUND->SetBGMVolume(setting.bgmVolume);
+				SOUND->SetSFXVolume(setting.sfxVolume);
+
 				SaveSettings(setting);
 			}
 		}
@@ -97,13 +109,13 @@ void SettingUpdate(GameState& state)
 			break;
 
 		case SettingsMenu::RESET:
-			SaveSettings(setting);
 			ResetSettingData(setting);
+			SaveSettings(setting);
 			break;
 
 		case SettingsMenu::BACK:
 			system("cls");
-			state.curScene = Scene::TITLE;
+			state.curScene = setting.returnScene;
 			break;
 		}
 	}
