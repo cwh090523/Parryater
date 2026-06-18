@@ -14,7 +14,7 @@ void StageInit(GameState& state) {
         3,             // enemyHp
         200,           // enemyMoveSpeed
         1000,          // enemyAttackSpeed
-        SpawnRusher,    // 함수 포인터
+        SpawnShooter,    // 함수 포인터
         5, //spawncount
         });
     wave1.data.push_back(WaveEnemyData{
@@ -27,6 +27,28 @@ void StageInit(GameState& state) {
     5, //spawncount
         });
     state.stageData.waves.push_back(wave1);
+
+    StageWave wave2;
+    wave2.data.push_back(WaveEnemyData{
+        15,            // enemyCount
+        1500,           // spawnInterval
+        3,             // enemyHp
+        200,           // enemyMoveSpeed
+        1000,          // enemyAttackSpeed
+        SpawnRusher,    // 함수 포인터
+        5, //spawncount
+        });
+    wave2.data.push_back(WaveEnemyData{
+    5,            // enemyCount
+    1500,           // spawnInterval
+    2,             // enemyHp
+    200,           // enemyMoveSpeed
+    1000,          // enemyAttackSpeed
+    SpawnZigzag,    // 함수 포인터
+    5, //spawncount
+        });
+    state.stageData.waves.push_back(wave2);
+
     state.stageData.waves.emplace_back();
     state.stageData.waves.emplace_back();
 }

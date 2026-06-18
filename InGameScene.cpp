@@ -17,6 +17,7 @@ void InGameInit(GameState& state) {
 
     state.inGameData.enemies.clear();
     state.inGameData.bullets.clear();
+    if (!state.inGameData.isGamming) {
 
     state.inGameData.player.stats.maxHp = 10;
     state.inGameData.player.stats.hp = 10;
@@ -29,6 +30,9 @@ void InGameInit(GameState& state) {
     state.inGameData.player.lastMoveTime = state.curTime;
     state.inGameData.player.lastAttackTime = state.curTime;
     state.inGameData.player.invisibleEndTime = 0;
+    state.inGameData.isGamming = true;
+
+    }
 
     StageInit(state);
 }
@@ -46,8 +50,8 @@ void InGameCollision(GameState& state) {
 
                 int minEnemyX = min(enemy->prevPos.x, enemy->pos.x) - 1;
                 int maxEnemyX = max(enemy->prevPos.x, enemy->pos.x) + 1;
-                int minEnemyY = min(enemy->prevPos.y, enemy->pos.y);
-                int maxEnemyY = max(enemy->prevPos.y, enemy->pos.y);
+                int minEnemyY = min(enemy->prevPos.y, enemy->pos.y) - 1;
+                int maxEnemyY = max(enemy->prevPos.y, enemy->pos.y) + 1;
 
                 int minBulletX = min(bullet.prevPos.x, bullet.pos.x);
                 int maxBulletX = max(bullet.prevPos.x, bullet.pos.x);
@@ -68,8 +72,8 @@ void InGameCollision(GameState& state) {
         else {
             int minPlayerX = min(player.prevPos.x, player.pos.x) - 1;
             int maxPlayerX = max(player.prevPos.x, player.pos.x) + 1;
-            int minPlayerY = min(player.prevPos.y, player.pos.y);
-            int maxPlayerY = max(player.prevPos.y, player.pos.y);
+            int minPlayerY = min(player.prevPos.y, player.pos.y) - 1;
+            int maxPlayerY = max(player.prevPos.y, player.pos.y) + 1;
 
             int minBulletX = min(bullet.prevPos.x, bullet.pos.x);
             int maxBulletX = max(bullet.prevPos.x, bullet.pos.x);
@@ -77,14 +81,20 @@ void InGameCollision(GameState& state) {
             int maxBulletY = max(bullet.prevPos.y, bullet.pos.y);
 
             if (maxBulletX >= minPlayerX && minBulletX <= maxPlayerX && maxBulletY >= minPlayerY && minBulletY <= maxPlayerY) {
-                bullet.isActive = false;
                 if (player.IsDashing(state.curTime)) {
-                    ShakeConsoleWindow(15, 150, 15);
+                    ShakeConsoleWindow(15, 45, 15);
+                    bullet.moveDir.x *=-1;
+                    bullet.moveDir.y *=-1;
+                    bullet.type = ProjectileType::Player;
+
                     player.invisibleEndTime = state.curTime + 800;
                     player.dashCooldownEndTime = state.curTime;
                     state.inGameData.score += 200;
+                    auto wave = new WaveDeco(state, Color::WHITE, 50, player.pos, 2, 0);
+                    state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
                 }
                 else if (!playerInvincible) {
+                bullet.isActive = false;
                     player.stats.hp -= bullet.damage;
                     player.invisibleEndTime = state.curTime + 500;
                     ShakeConsoleWindow(5, 50, 25);
@@ -97,21 +107,28 @@ void InGameCollision(GameState& state) {
     for (const auto& enemy : state.inGameData.enemies) {
         if (!enemy->isAlive) continue;
 
-        int minPlayerX = min(player.prevPos.x, player.pos.x) - 1;
-        int maxPlayerX = max(player.prevPos.x, player.pos.x) + 1;
-        int minPlayerY = min(player.prevPos.y, player.pos.y);
-        int maxPlayerY = max(player.prevPos.y, player.pos.y);
+        int range = player.IsDashing(state.curTime) ? 1 : 0;
+
+        int minPlayerX = min(player.prevPos.x, player.pos.x) - range * 2;
+        int maxPlayerX = max(player.prevPos.x, player.pos.x) + range * 2;
+        int minPlayerY = min(player.prevPos.y, player.pos.y) - range;
+        int maxPlayerY = max(player.prevPos.y, player.pos.y) + range;
 
         int minEnemyX = min(enemy->prevPos.x, enemy->pos.x);
         int maxEnemyX = max(enemy->prevPos.x, enemy->pos.x);
         int minEnemyY = min(enemy->prevPos.y, enemy->pos.y);
         int maxEnemyY = max(enemy->prevPos.y, enemy->pos.y);
 
-        if (maxEnemyX >= minPlayerX && minEnemyX <= maxPlayerX && maxEnemyY >= minPlayerY && minEnemyY <= maxPlayerY) {
+        if (maxEnemyX >= minPlayerX && minEnemyX <= maxPlayerX &&
+            maxEnemyY >= minPlayerY && minEnemyY <= maxPlayerY) {
+
             if (player.IsDashing(state.curTime)) {
-                ShakeConsoleWindow(20, 200, 10);
+                ShakeConsoleWindow(50, 30, 10);
                 player.invisibleEndTime = state.curTime + 1000;
                 player.dashCooldownEndTime = state.curTime;
+                auto wave = new WaveDeco(state, Color::WHITE, 50, player.pos, 2, 0);
+                state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
+
                 state.inGameData.score += 300;
 
                 const_cast<Enemy*>(enemy.get())->stats.hp -= (player.stats.attackPower * 3);
@@ -123,7 +140,12 @@ void InGameCollision(GameState& state) {
             else if (!playerInvincible) {
                 player.stats.hp--;
                 player.invisibleEndTime = state.curTime + 500;
-                ShakeConsoleWindow(5, 50, 25);
+                SetColor(Color::WHITE, Color::LIGHT_RED);
+                system("cls");
+                ShakeConsoleWindow(50, 50, 10);
+
+                SetColor();
+                system("cls");
                 if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
             }
         }
@@ -163,7 +185,11 @@ void InGameUpdate(GameState& state) {
             enemy->EnemyUpdate(state);
         }
     }
-
+    for (auto& deco : state.inGameData.decoObject) {
+        if (deco->isActive) {
+            deco->DecoUpdate(state);
+        }
+    }
     InGameCollision(state);
 
     auto iter = state.inGameData.bullets.begin();
@@ -194,6 +220,33 @@ void InGameUpdate(GameState& state) {
             iter2 = state.inGameData.enemies.erase(iter2);
         }
     }
+    auto iter3 = state.inGameData.decoObject.begin();
+    while (iter3 != state.inGameData.decoObject.end()) {
+        if ((*iter3)->isActive) {
+            ++iter3;
+        }
+        else {
+
+            auto ClearPos = [](Position p) {
+                if (p.x >= 0 && p.x < GAME_WIDTH && p.y >= 0 && p.y < HEIGHT) {
+                    GotoXY(p.x, p.y); cout << " ";
+                }
+                };
+            ClearPos((*iter3)->prevPos);
+            ClearPos((*iter3)->pos);
+
+            iter3 = state.inGameData.decoObject.erase(iter3);
+        }
+    }
+    for (auto& deco : state.inGameData.decoObject) {
+        if (deco->isActive) deco->DecoUpdate(state);
+    }
+    if (!state.inGameData.decoSpawnQueue.empty()) {
+        for (auto& newDeco : state.inGameData.decoSpawnQueue) {
+            state.inGameData.decoObject.push_back(std::move(newDeco));
+        }
+        state.inGameData.decoSpawnQueue.clear();
+    }
 }
 
 void InGameRender(const GameState& state) {
@@ -204,25 +257,48 @@ void InGameRender(const GameState& state) {
 
     SetUnicodeMode();
 
+
+    for (const auto& deco : state.inGameData.enemies) {
+        GotoXY(deco->prevPos.x, deco->prevPos.y);
+        wcout << L"  ";
+    }
+
     for (const auto& enemy : state.inGameData.enemies) {
         GotoXY(enemy->prevPos.x, enemy->prevPos.y);
-        wcout << L" ";
+        wcout << L"  ";
     }
     for (const Bullet& bullet : state.inGameData.bullets) {
         GotoXY(bullet.prevPos.x, bullet.prevPos.y);
-        wcout << L" ";
+        wcout << L"  ";
     }
     GotoXY(player.prevPos.x, player.prevPos.y);
     wcout << L" ";
+    for (const auto& deco : state.inGameData.decoObject) {
+        if (!deco->isActive) continue;
+        if (deco->prevPos.x >= 0 && deco->prevPos.x < GAME_WIDTH &&
+            deco->prevPos.y >= 0 && deco->prevPos.y < HEIGHT) {
+            GotoXY(deco->prevPos.x, deco->prevPos.y);
+            wcout << L"  ";
+        }
+    }
+
     for (const auto& enemy : state.inGameData.enemies) {
         if (!enemy->isAlive) continue;
         if (enemy->prevPos.x >= 0 && enemy->prevPos.x < GAME_WIDTH &&
             enemy->prevPos.y >= 0 && enemy->prevPos.y < HEIGHT) {
             GotoXY(enemy->prevPos.x, enemy->prevPos.y);
-            wcout << L" ";
+            wcout << L"  ";
         }
     }
-
+    for (const auto& deco : state.inGameData.decoObject) {
+        if (!deco->isActive) continue;
+        if (deco->pos.x >= 0 && deco->pos.x < GAME_WIDTH &&
+            deco->pos.y >= 0 && deco->pos.y < HEIGHT) {
+            GotoXY(deco->pos.x, deco->pos.y);
+            SetColor(deco->colors);
+            wcout << L"■";
+        }
+    }
     for (const auto& enemy : state.inGameData.enemies) {
         if (!enemy->isAlive) continue;
         if (enemy->pos.x >= 0 && enemy->pos.x < GAME_WIDTH &&

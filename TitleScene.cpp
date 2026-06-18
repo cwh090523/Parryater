@@ -14,6 +14,7 @@ void InitTitle(GameState& state)
 	SOUND->Load("TitleBGM","Parryater.wav");
 	SOUND->PlayBGM("TitleBGM");
 	system("cls");
+	state.inGameData.isGamming = false;
 
 }
 void UpdateTitle(GameState& state)

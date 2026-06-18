@@ -23,11 +23,14 @@ struct TitleData
 
 struct InGameData
 {
+    bool isGamming = false;
     bool isPaused = false;
     bool isGameOver = false;
     int score = 0;
     Player player;
     vector<unique_ptr<Enemy>> enemies;
+    vector<unique_ptr<DecoObject>> decoObject;
+    vector<unique_ptr<DecoObject>> decoSpawnQueue;
     vector<Bullet> bullets;
 };
 struct WaveEnemyData {
