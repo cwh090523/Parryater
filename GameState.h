@@ -27,6 +27,8 @@ struct InGameData
     int score = 0;
     Player player;
     vector<unique_ptr<Enemy>> enemies;
+    vector<unique_ptr<DecoObject>> decoObject;
+    vector<unique_ptr<DecoObject>> decoSpawnQueue;
     vector<Bullet> bullets;
 };
 struct WaveEnemyData {

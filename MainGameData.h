@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include "Console.h"
 struct GameState;
 class Enemy;
 class Bullet;
@@ -56,7 +57,36 @@ public:
         return curTime >= dashCooldownEndTime;
     }
 };
+class DecoObject {
+public:
+    DecoObject(GameState& state, Color color, int lifeTime, Position position, const string& text = "бс")
+        : showText(text), colors(color), pos(position), prevPos(position), lifeTimes(lifeTime) {
 
+    }
+
+    bool isActive = true;
+    virtual ~DecoObject() {}
+    int lifeTimes;
+    ULONGLONG startTime = 0;
+    ULONGLONG disableTime = 0;
+    Position prevPos = { 0,0 };
+    Position pos = { 0,0 };
+    string showText;
+    Color colors;
+
+    virtual void DecoUpdate(GameState& state) = 0;
+};
+class WaveDeco : public DecoObject {
+public:
+    WaveDeco(GameState& state, Color color, int lifeTime, Position position, int size, int count, const string& text = "бс", Position dir = { 0,0 });
+
+    virtual ~WaveDeco() {}
+    int counts = 0;
+    int sizes = 0;
+    Position dirs;
+    void DecoUpdate(GameState& state) override;
+    
+};
 class Enemy {
 public:
     Stats stats;
