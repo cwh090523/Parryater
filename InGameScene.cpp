@@ -86,7 +86,8 @@ void InGameCollision(GameState& state) {
                     bullet.moveDir.x *=-1;
                     bullet.moveDir.y *=-1;
                     bullet.type = ProjectileType::Player;
-
+                    bullet.damage += player.stats.attackPower * 10;
+                    bullet.MoveSpeed /= 2;
                     player.invisibleEndTime = state.curTime + 800;
                     player.dashCooldownEndTime = state.curTime;
                     state.inGameData.score += 200;
