@@ -1,7 +1,5 @@
-
 #pragma once
-#include "Console.h"
-struct GameState;
+#include "GameState.h"
 
 void ShopInit(GameState& state);
 void ShopUpdate(GameState& state);

@@ -1,19 +1,25 @@
 ﻿#include "Console.h"
 #include "TitleScene.h"
 #include "AsciiArt.h"
+#include "SoundManager.h"
 #include <chrono>
 static AsciiObjs objs;
 void InitTitle(GameState& state)
 {
 	system("cls");
+	SOUND->Init();
+	SOUND->StopBGM();
 	AsciiInit(objs);
 	MatrixAnimation("Parryater ", 40, 50);
+	SOUND->Load("TitleBGM","Parryater.wav");
+	SOUND->PlayBGM("TitleBGM");
 	system("cls");
 	state.inGameData.isGamming = false;
 
 }
 void UpdateTitle(GameState& state)
 {
+	SOUND->Update();
 	AsciiUpdate(objs);
 	// 키 입력 화살표 왔다갔다
 	if (GetKeyDown(VK_UP))
@@ -23,6 +29,11 @@ void UpdateTitle(GameState& state)
 	if (GetKeyDown(VK_DOWN))
 	{
 		state.titleData.curMenu = (Menu)std::min((int)Menu::QUIT, (int)state.titleData.curMenu + 1);
+	}
+	if (GetKeyDown('B'))
+	{
+		state.curScene = Scene::SHOP;
+		return;
 	}
 	if (GetKeyDown(VK_SPACE) || GetKeyDown(VK_RETURN))
 	{

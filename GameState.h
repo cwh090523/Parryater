@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <vector>
 #include <memory>
+#include <string>
 #include "Enums.h"
 #include "MainGameData.h"
 #include "SettingData.h"
@@ -47,7 +48,11 @@ struct StageWave {
     StageWave() = default;
     StageWave(initializer_list<WaveEnemyData> init) : data(init) {}
 };
-struct ShopData {};
+struct ShopData
+{
+    int selectedIndex = 0;
+    std::string message = "";
+};
 struct StageData {
     int curStage = 1;
     int curWave = 0;
