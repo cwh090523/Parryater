@@ -7,21 +7,35 @@
 #include "Console.h"
 #include "GameState.h"
 #include "SettingStorage.h"
+#include "SoundManager.h"
 int main()
 {
 	GameState state;
+	srand((unsigned int)time(nullptr));
+
+	state = GameState{};
+
 	SetConsoleSize(WIDTH, HEIGHT);
 	SetConsoleMouseInputDisabled();
 	SetConsoleWindowStyle(true);
 	SetcursorVisble(false);
+
+
 	LoadSettings(state.settingData);
-	srand(time(nullptr));
+
+	SOUND->Init();
+	SOUND->SetBGMVolume(state.settingData.bgmVolume);
+	SOUND->SetSFXVolume(state.settingData.sfxVolume);
+
+	state.curScene = Scene::TITLE;
+	state.prevScene = Scene::NONE;
 	while (state.isRunning)
 	{
 
 		FrameSync(100);
 		state.curTime = GetTickCount64();
 		UpdateInput();
+		SOUND->Update();
 		if (state.prevScene != state.curScene) {
 			switch (state.curScene)
 			{
