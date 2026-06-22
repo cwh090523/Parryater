@@ -12,3 +12,4 @@ static unique_ptr<Enemy> SpawnZigzag(Stats stat, Position pos) { return make_uni
 void StageInit(GameState& state);
 
 void StageUpdate(GameState& state);
+void StageRender(const GameState state);
