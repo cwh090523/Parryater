@@ -21,7 +21,7 @@ void SaveSettings(const SettingData& setting)
 
 void LoadSettings(SettingData& setting)
 {
-	std::ifstream fin("setting.txt");
+	std::ifstream fin("settings.txt");
 
 	if (!fin)
 		return;

@@ -156,6 +156,17 @@ void InGameCollision(GameState& state) {
 void InGameUpdate(GameState& state) {
     if (GetKeyDown(VK_ESCAPE)) { state.isRunning = false; return; }
     if (state.inGameData.isGameOver) { state.curScene = Scene::GAMEOVER; return; }
+    if (GetKeyDown('B'))
+    {
+        state.curScene = Scene::SHOP;
+        return;
+    }
+    if (GetKeyDown(VK_TAB))
+    {
+        state.settingData.returnScene = state.curScene;
+        state.curScene = Scene::SETTING;
+        return;
+    }
 
     Player& player = state.inGameData.player;
     MovementSettingData& msd = state.settingData.movementSettingData;

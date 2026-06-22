@@ -19,7 +19,6 @@ void InitTitle(GameState& state)
 }
 void UpdateTitle(GameState& state)
 {
-	SOUND->Update();
 	AsciiUpdate(objs);
 	// 키 입력 화살표 왔다갔다
 	if (GetKeyDown(VK_UP))
