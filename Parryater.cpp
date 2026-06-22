@@ -8,6 +8,7 @@
 #include "GameState.h"
 #include "SettingStorage.h"
 #include "SoundManager.h"
+
 int main()
 {
 	GameState state;

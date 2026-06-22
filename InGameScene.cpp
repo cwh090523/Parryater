@@ -10,6 +10,7 @@
 using namespace std;
 
 void InGameInit(GameState& state) {
+    
     system("cls");
     state.inGameData.isPaused = false;
     state.inGameData.isGameOver = false;
@@ -64,6 +65,7 @@ void InGameCollision(GameState& state) {
                     if (enemy->stats.hp <= 0) {
                         enemy->isAlive = false;
                         state.inGameData.score += 100;
+                        SOUND->PlaySFX("damage3");
                     }
                     break;
                 }
@@ -93,12 +95,14 @@ void InGameCollision(GameState& state) {
                     state.inGameData.score += 200;
                     auto wave = new WaveDeco(state, Color::WHITE, 50, player.pos, 2, 0);
                     state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
+                    SOUND->PlaySFX("damage3");
                 }
                 else if (!playerInvincible) {
                 bullet.isActive = false;
                     player.stats.hp -= bullet.damage;
                     player.invisibleEndTime = state.curTime + 500;
                     ShakeConsoleWindow(5, 50, 25);
+                    SOUND->PlaySFX("damage3");
                     if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
                 }
             }
