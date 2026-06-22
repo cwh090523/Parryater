@@ -6,7 +6,7 @@
 #include <cmath>
 #include <algorithm> 
 #include <iostream>
-
+#include "SoundManager.h"
 using namespace std;
 
 void InGameInit(GameState& state) {
@@ -57,7 +57,7 @@ void InGameCollision(GameState& state) {
                 int maxBulletX = max(bullet.prevPos.x, bullet.pos.x);
                 int minBulletY = min(bullet.prevPos.y, bullet.pos.y);
                 int maxBulletY = max(bullet.prevPos.y, bullet.pos.y);
-
+                
                 if (maxBulletX >= minEnemyX && minBulletX <= maxEnemyX && maxBulletY >= minEnemyY && minBulletY <= maxEnemyY) {
                     bullet.isActive = false;
                     enemy->stats.hp -= player.stats.attackPower;
