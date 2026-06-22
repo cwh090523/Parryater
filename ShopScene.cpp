@@ -25,11 +25,11 @@ struct ShopItem
 
 const ShopItem shopItems[] =
 {
-    { "HP UP              ",           "Max HP +5           ", 300, ShopItemType::MAX_HP,        5 },
-    { "ATTACK UP          ",       "Attack Power +1     ",     500, ShopItemType::ATTACK_POWER,  1 },
-    { "ATTACK SPEED UP     ", "Attack Cooldown -50 ",          400, ShopItemType::ATTACK_SPEED, 50 },
-    { "MOVE SPEED UP      ",   "Move Speed +10      ",         350, ShopItemType::MOVE_SPEED,   10 },
-    { "DASH COOL DOWN      ",  "Dash Cooldown -100  " ,        450, ShopItemType::DASH_COOLDOWN,100 }
+    { "HP UP              " ,"Max HP +5           ",        300, ShopItemType::MAX_HP,        5 },
+    { "ATTACK UP          " ,"Attack Power +1     ",        500, ShopItemType::ATTACK_POWER,  1 },
+    { "ATTACK SPEED UP     ","Attack Cooldown -50 ",        400, ShopItemType::ATTACK_SPEED, 50 },
+    { "MOVE SPEED UP      " ,"Move Speed +10      ",        350, ShopItemType::MOVE_SPEED,   10 },
+    { "DASH COOL DOWN      ","Dash Cooldown -100  ",        450, ShopItemType::DASH_COOLDOWN,100}
 };
 
 const int SHOP_ITEM_COUNT = sizeof(shopItems) / sizeof(shopItems[0]);
@@ -90,6 +90,7 @@ void ShopInit(GameState& state)
 void ShopUpdate(GameState& state)
 {
     ShopData& shop = state.shopData;
+       
 
     if (GetKeyDown(VK_ESCAPE))
     {
