@@ -1,6 +1,6 @@
 #pragma once
 #include "StageSetting.h"
-
+#include "SoundManager.h"
 void StageInit(GameState& state) {
     state.stageData.curWave = 0;
     state.stageData.enemiesRemaining = 0;
@@ -66,6 +66,12 @@ void StageUpdate(GameState& state) {
     if (sd.curWaveEnemyDataNumber >= (int)wave.data.size()) {
         if (state.inGameData.enemies.empty()) {
             sd.curWave++;
+            if (sd.curWave == 4) {
+                SOUND->PlayBGM("Stage4+");
+            }
+            else if (sd.curWave == 7) {
+                SOUND->PlayBGM("Stage7+");
+            }
             sd.curWaveEnemyDataNumber = 0;
             sd.enemiesRemaining = 0;
             sd.lastSpawnTime = state.curTime;
@@ -99,4 +105,7 @@ void StageUpdate(GameState& state) {
             sd.curWaveEnemyDataNumber++;
         }
     }
+}
+void StageRender(const GameState state) {
+
 }

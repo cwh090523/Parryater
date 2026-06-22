@@ -12,6 +12,13 @@ void InitTitle(GameState& state)
 	AsciiInit(objs);
 	MatrixAnimation("Parryater ", 40, 50);
 	SOUND->Load("TitleBGM","Parryater.wav");
+	SOUND->Load("Stage0+", "Stage0+.mp3");
+	SOUND->Load("Stage4+", "Stage4+.mp3");
+	SOUND->Load("Stage7+", "Stage7+.mp3");
+	SOUND->Load("Stage10+", "Stage10+.mp3");
+	SOUND->Load("Stage15+", "Stage15+ (2).mp3");
+	SOUND->Load("ParrySFX", "damage3.wav");
+	SOUND->Load("HitSFX", "damage5.wav");
 	SOUND->PlayBGM("TitleBGM");
 	system("cls");
 	state.inGameData.isGamming = false;

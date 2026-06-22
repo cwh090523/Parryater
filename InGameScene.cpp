@@ -12,12 +12,14 @@ using namespace std;
 void InGameInit(GameState& state) {
     
     system("cls");
+
     state.inGameData.isPaused = false;
     state.inGameData.isGameOver = false;
     state.inGameData.score = 0;
 
     state.inGameData.enemies.clear();
     state.inGameData.bullets.clear();
+    SOUND->PlayBGM("Stage0+");
     if (!state.inGameData.isGamming) {
 
     state.inGameData.player.stats.maxHp = 10;
@@ -49,8 +51,8 @@ void InGameCollision(GameState& state) {
             for (auto& enemy : state.inGameData.enemies) {
                 if (!enemy->isAlive) continue;
 
-                int minEnemyX = min(enemy->prevPos.x, enemy->pos.x) - 1;
-                int maxEnemyX = max(enemy->prevPos.x, enemy->pos.x) + 1;
+                int minEnemyX = min(enemy->prevPos.x, enemy->pos.x) - 2;
+                int maxEnemyX = max(enemy->prevPos.x, enemy->pos.x) + 2;
                 int minEnemyY = min(enemy->prevPos.y, enemy->pos.y) - 1;
                 int maxEnemyY = max(enemy->prevPos.y, enemy->pos.y) + 1;
 
@@ -65,17 +67,19 @@ void InGameCollision(GameState& state) {
                     if (enemy->stats.hp <= 0) {
                         enemy->isAlive = false;
                         state.inGameData.score += 100;
-                        SOUND->PlaySFX("damage3");
+                        
                     }
                     break;
                 }
             }
         }
         else {
-            int minPlayerX = min(player.prevPos.x, player.pos.x) - 1;
-            int maxPlayerX = max(player.prevPos.x, player.pos.x) + 1;
-            int minPlayerY = min(player.prevPos.y, player.pos.y) - 1;
-            int maxPlayerY = max(player.prevPos.y, player.pos.y) + 1;
+            int range = player.IsDashing(state.curTime) ? 1 : 0;
+
+            int minPlayerX = min(player.prevPos.x, player.pos.x) - range * 4;
+            int maxPlayerX = max(player.prevPos.x, player.pos.x) + range * 4;
+            int minPlayerY = min(player.prevPos.y, player.pos.y) - range * 2;
+            int maxPlayerY = max(player.prevPos.y, player.pos.y) + range * 2;
 
             int minBulletX = min(bullet.prevPos.x, bullet.pos.x);
             int maxBulletX = max(bullet.prevPos.x, bullet.pos.x);
@@ -95,14 +99,14 @@ void InGameCollision(GameState& state) {
                     state.inGameData.score += 200;
                     auto wave = new WaveDeco(state, Color::WHITE, 50, player.pos, 2, 0);
                     state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
-                    SOUND->PlaySFX("damage3");
+                    SOUND->PlaySFX("ParrySFX");
                 }
                 else if (!playerInvincible) {
                 bullet.isActive = false;
                     player.stats.hp -= bullet.damage;
                     player.invisibleEndTime = state.curTime + 500;
                     ShakeConsoleWindow(5, 50, 25);
-                    SOUND->PlaySFX("damage3");
+                    SOUND->PlaySFX("HitSFX");
                     if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
                 }
             }
@@ -114,10 +118,10 @@ void InGameCollision(GameState& state) {
 
         int range = player.IsDashing(state.curTime) ? 1 : 0;
 
-        int minPlayerX = min(player.prevPos.x, player.pos.x) - range * 2;
-        int maxPlayerX = max(player.prevPos.x, player.pos.x) + range * 2;
-        int minPlayerY = min(player.prevPos.y, player.pos.y) - range;
-        int maxPlayerY = max(player.prevPos.y, player.pos.y) + range;
+        int minPlayerX = min(player.prevPos.x, player.pos.x) - range * 4;
+        int maxPlayerX = max(player.prevPos.x, player.pos.x) + range * 4;
+        int minPlayerY = min(player.prevPos.y, player.pos.y) - range * 2;
+        int maxPlayerY = max(player.prevPos.y, player.pos.y) + range * 2;
 
         int minEnemyX = min(enemy->prevPos.x, enemy->pos.x);
         int maxEnemyX = max(enemy->prevPos.x, enemy->pos.x);
@@ -135,7 +139,7 @@ void InGameCollision(GameState& state) {
                 state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
 
                 state.inGameData.score += 300;
-
+                SOUND->PlaySFX("ParrySFX");
                 const_cast<Enemy*>(enemy.get())->stats.hp -= (player.stats.attackPower * 3);
                 if (enemy->stats.hp <= 0) {
                     const_cast<Enemy*>(enemy.get())->isAlive = false;
@@ -145,12 +149,13 @@ void InGameCollision(GameState& state) {
             else if (!playerInvincible) {
                 player.stats.hp--;
                 player.invisibleEndTime = state.curTime + 500;
-                SetColor(Color::WHITE, Color::LIGHT_RED);
-                system("cls");
+                //SetColor(Color::WHITE, Color::LIGHT_RED);
+                //system("cls");
                 ShakeConsoleWindow(50, 50, 10);
 
                 SetColor();
                 system("cls");
+                SOUND->PlaySFX("HitSFX");
                 if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
             }
         }
