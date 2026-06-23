@@ -52,6 +52,7 @@ struct ShopData
 {
     int selectedIndex = 0;
     std::string message = "";
+    Scene returnScene = Scene::INGAME;
 };
 struct StageData {
     int curStage = 1;

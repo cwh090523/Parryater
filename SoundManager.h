@@ -39,6 +39,7 @@ private:
     FMOD::System* m_system = nullptr;
 
     FMOD::Channel* m_bgmCh = nullptr;
+    FMOD::Channel* m_sfxCh = nullptr;
 
     std::map<std::string, FMOD::Sound*> m_sounds;
 
