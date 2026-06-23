@@ -11,169 +11,169 @@ void StageInit(GameState& state) {
         // Wave 1
         {
             StageWave w;
-            w.data.push_back({ 20, 900, 2, 220, 1500, SpawnRusher, 5 });
-            w.data.push_back({ 20, 900, 2, 220, 1500, SpawnZigzag, 5 });
-            w.data.push_back({ 20, 900, 2, 220, 1500, SpawnRusher, 5 });
+            w.data.push_back({ 20, 900, 10, 220, 1500, SpawnRusher, 5 });
+            w.data.push_back({ 20, 900, 10, 220, 1500, SpawnZigzag, 5 });
+            w.data.push_back({ 20, 900, 10, 220, 1500, SpawnRusher, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 2
         {
             StageWave w;
-            w.data.push_back({ 25, 850, 2, 210, 1400, SpawnRusher, 5 });
-            w.data.push_back({ 20, 850, 2, 210, 1400, SpawnZigzag, 5 });
-            w.data.push_back({ 15, 850, 2, 210, 1400, SpawnShooter, 5 });
-            w.data.push_back({ 20, 850, 2, 210, 1400, SpawnRusher, 5 });
+            w.data.push_back({ 25, 880, 16, 218, 1475, SpawnRusher, 5 });
+            w.data.push_back({ 20, 880, 16, 218, 1475, SpawnZigzag, 5 });
+            w.data.push_back({ 15, 880, 16, 218, 1475, SpawnShooter, 5 });
+            w.data.push_back({ 20, 880, 16, 218, 1475, SpawnRusher, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 3
         {
             StageWave w;
-            w.data.push_back({ 25, 800, 3, 200, 1300, SpawnShooter, 5 });
-            w.data.push_back({ 20, 800, 3, 200, 1300, SpawnZigzag, 5 });
-            w.data.push_back({ 20, 800, 3, 200, 1300, SpawnWaver, 5 });
-            w.data.push_back({ 20, 800, 3, 200, 1300, SpawnShooter, 5 });
+            w.data.push_back({ 25, 860, 22, 216, 1450, SpawnShooter, 5 });
+            w.data.push_back({ 20, 860, 22, 216, 1450, SpawnZigzag, 5 });
+            w.data.push_back({ 20, 860, 22, 216, 1450, SpawnWaver, 5 });
+            w.data.push_back({ 20, 860, 22, 216, 1450, SpawnShooter, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 4
         {
             StageWave w;
-            w.data.push_back({ 30, 750, 3, 190, 1200, SpawnWaver, 5 });
-            w.data.push_back({ 25, 750, 3, 190, 1200, SpawnShooter, 5 });
-            w.data.push_back({ 20, 750, 3, 190, 1200, SpawnSideShooter, 5 });
-            w.data.push_back({ 20, 750, 3, 190, 1200, SpawnZigzag, 5 });
-            w.data.push_back({ 20, 750, 3, 190, 1200, SpawnWaver, 5 });
+            w.data.push_back({ 30, 840, 28, 214, 1425, SpawnWaver, 5 });
+            w.data.push_back({ 25, 840, 28, 214, 1425, SpawnShooter, 5 });
+            w.data.push_back({ 20, 840, 28, 214, 1425, SpawnSideShooter, 5 });
+            w.data.push_back({ 20, 840, 28, 214, 1425, SpawnZigzag, 5 });
+            w.data.push_back({ 20, 840, 28, 214, 1425, SpawnWaver, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 5
         {
             StageWave w;
-            w.data.push_back({ 30, 700, 4, 180, 1100, SpawnSideShooter, 5 });
-            w.data.push_back({ 25, 700, 3, 180, 1100, SpawnZigzag, 5 });
-            w.data.push_back({ 20, 700, 3, 180, 1100, SpawnShooter, 5 });
-            w.data.push_back({ 20, 700, 3, 180, 1100, SpawnWaver, 5 });
-            w.data.push_back({ 20, 700, 4, 180, 1100, SpawnSideShooter, 5 });
+            w.data.push_back({ 30, 820, 36, 212, 1400, SpawnSideShooter, 5 });
+            w.data.push_back({ 25, 820, 36, 212, 1400, SpawnZigzag, 5 });
+            w.data.push_back({ 20, 820, 36, 212, 1400, SpawnShooter, 5 });
+            w.data.push_back({ 20, 820, 36, 212, 1400, SpawnWaver, 5 });
+            w.data.push_back({ 20, 820, 36, 212, 1400, SpawnSideShooter, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 6
         {
             StageWave w;
-            w.data.push_back({ 35, 650, 4, 170, 1000, SpawnSideShooter, 5 });
-            w.data.push_back({ 25, 650, 3, 170, 1000, SpawnTrackerX, 5 });
-            w.data.push_back({ 20, 650, 3, 170, 1000, SpawnShooter, 5 });
-            w.data.push_back({ 20, 650, 3, 170, 1000, SpawnZigzag, 5 });
-            w.data.push_back({ 20, 650, 4, 170, 1000, SpawnTrackerX, 5 });
+            w.data.push_back({ 35, 800, 44, 210, 1375, SpawnSideShooter, 5 });
+            w.data.push_back({ 25, 800, 44, 210, 1375, SpawnTrackerX, 5 });
+            w.data.push_back({ 20, 800, 44, 210, 1375, SpawnShooter, 5 });
+            w.data.push_back({ 20, 800, 44, 210, 1375, SpawnZigzag, 5 });
+            w.data.push_back({ 20, 800, 44, 210, 1375, SpawnTrackerX, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 7
         {
             StageWave w;
-            w.data.push_back({ 35, 600, 5, 160, 900, SpawnCrossShooter, 5 });
-            w.data.push_back({ 25, 600, 4, 160, 900, SpawnShooter, 5 });
-            w.data.push_back({ 20, 600, 4, 160, 900, SpawnSideShooter, 5 });
-            w.data.push_back({ 20, 600, 4, 160, 900, SpawnTrackerX, 5 });
-            w.data.push_back({ 20, 600, 5, 160, 900, SpawnCrossShooter, 5 });
+            w.data.push_back({ 35, 780, 52, 208, 1350, SpawnCrossShooter, 5 });
+            w.data.push_back({ 25, 780, 52, 208, 1350, SpawnShooter, 5 });
+            w.data.push_back({ 20, 780, 52, 208, 1350, SpawnSideShooter, 5 });
+            w.data.push_back({ 20, 780, 52, 208, 1350, SpawnTrackerX, 5 });
+            w.data.push_back({ 20, 780, 52, 208, 1350, SpawnCrossShooter, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 8
         {
             StageWave w;
-            w.data.push_back({ 40, 600, 5, 150, 850, SpawnCrossShooter, 5 });
-            w.data.push_back({ 30, 600, 4, 150, 850, SpawnSideShooter, 5 });
-            w.data.push_back({ 25, 600, 4, 150, 850, SpawnShooter, 5 });
-            w.data.push_back({ 20, 600, 4, 150, 850, SpawnWaver, 5 });
-            w.data.push_back({ 20, 600, 4, 150, 850, SpawnZigzag, 5 });
-            w.data.push_back({ 20, 600, 5, 150, 850, SpawnCrossShooter, 5 });
+            w.data.push_back({ 40, 760, 62, 206, 1325, SpawnCrossShooter, 5 });
+            w.data.push_back({ 30, 760, 62, 206, 1325, SpawnSideShooter, 5 });
+            w.data.push_back({ 25, 760, 62, 206, 1325, SpawnShooter, 5 });
+            w.data.push_back({ 20, 760, 62, 206, 1325, SpawnWaver, 5 });
+            w.data.push_back({ 20, 760, 62, 206, 1325, SpawnZigzag, 5 });
+            w.data.push_back({ 20, 760, 62, 206, 1325, SpawnCrossShooter, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 9
         {
             StageWave w;
-            w.data.push_back({ 40, 550, 6, 140, 800, SpawnRadialShooter, 5 });
-            w.data.push_back({ 30, 550, 5, 140, 800, SpawnZigzag, 5 });
-            w.data.push_back({ 25, 550, 5, 140, 800, SpawnShooter, 5 });
-            w.data.push_back({ 20, 550, 5, 140, 800, SpawnTrackerX, 5 });
-            w.data.push_back({ 20, 550, 5, 140, 800, SpawnSideShooter, 5 });
-            w.data.push_back({ 20, 550, 6, 140, 800, SpawnRadialShooter, 5 });
+            w.data.push_back({ 40, 740, 72, 204, 1300, SpawnRadialShooter, 5 });
+            w.data.push_back({ 30, 740, 72, 204, 1300, SpawnZigzag, 5 });
+            w.data.push_back({ 25, 740, 72, 204, 1300, SpawnShooter, 5 });
+            w.data.push_back({ 20, 740, 72, 204, 1300, SpawnTrackerX, 5 });
+            w.data.push_back({ 20, 740, 72, 204, 1300, SpawnSideShooter, 5 });
+            w.data.push_back({ 20, 740, 72, 204, 1300, SpawnRadialShooter, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 10
         {
             StageWave w;
-            w.data.push_back({ 45, 550, 6, 130, 750, SpawnRadialShooter, 5 });
-            w.data.push_back({ 30, 550, 5, 130, 750, SpawnTrackerX, 5 });
-            w.data.push_back({ 25, 550, 5, 130, 750, SpawnCrossShooter, 5 });
-            w.data.push_back({ 20, 550, 5, 130, 750, SpawnShooter, 5 });
-            w.data.push_back({ 20, 550, 5, 130, 750, SpawnZigzag, 5 });
-            w.data.push_back({ 20, 550, 6, 130, 750, SpawnRadialShooter, 5 });
+            w.data.push_back({ 45, 720, 82, 202, 1275, SpawnRadialShooter, 5 });
+            w.data.push_back({ 30, 720, 82, 202, 1275, SpawnTrackerX, 5 });
+            w.data.push_back({ 25, 720, 82, 202, 1275, SpawnCrossShooter, 5 });
+            w.data.push_back({ 20, 720, 82, 202, 1275, SpawnShooter, 5 });
+            w.data.push_back({ 20, 720, 82, 202, 1275, SpawnZigzag, 5 });
+            w.data.push_back({ 20, 720, 82, 202, 1275, SpawnRadialShooter, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 11
         {
             StageWave w;
-            w.data.push_back({ 40, 500, 7, 120, 700, SpawnChaser, 5 });
-            w.data.push_back({ 30, 500, 6, 120, 700, SpawnCrossShooter, 5 });
-            w.data.push_back({ 25, 500, 6, 120, 700, SpawnRadialShooter, 5 });
-            w.data.push_back({ 20, 500, 6, 120, 700, SpawnTrackerX, 5 });
-            w.data.push_back({ 20, 500, 6, 120, 700, SpawnSideShooter, 5 });
-            w.data.push_back({ 20, 500, 7, 120, 700, SpawnChaser, 5 });
+            w.data.push_back({ 50, 700, 94, 200, 1250, SpawnChaser, 5 });
+            w.data.push_back({ 30, 700, 94, 200, 1250, SpawnCrossShooter, 5 });
+            w.data.push_back({ 25, 700, 94, 200, 1250, SpawnRadialShooter, 5 });
+            w.data.push_back({ 20, 700, 94, 200, 1250, SpawnSideShooter, 5 });
+            w.data.push_back({ 20, 700, 94, 200, 1250, SpawnTrackerX, 5 });
+            w.data.push_back({ 20, 700, 94, 200, 1250, SpawnShooter, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 12
         {
             StageWave w;
-            w.data.push_back({ 45, 500, 7, 110, 650, SpawnChaser, 5 });
-            w.data.push_back({ 30, 500, 6, 110, 650, SpawnRadialShooter, 5 });
-            w.data.push_back({ 25, 500, 6, 110, 650, SpawnCrossShooter, 5 });
-            w.data.push_back({ 20, 500, 6, 110, 650, SpawnSideShooter, 5 });
-            w.data.push_back({ 20, 500, 6, 110, 650, SpawnShooter, 5 });
-            w.data.push_back({ 20, 500, 7, 110, 650, SpawnChaser, 5 });
+            w.data.push_back({ 50, 680, 106, 198, 1225, SpawnChaser, 5 });
+            w.data.push_back({ 30, 680, 106, 198, 1225, SpawnRadialShooter, 5 });
+            w.data.push_back({ 25, 680, 106, 198, 1225, SpawnCrossShooter, 5 });
+            w.data.push_back({ 20, 680, 106, 198, 1225, SpawnSideShooter, 5 });
+            w.data.push_back({ 20, 680, 106, 198, 1225, SpawnShooter, 5 });
+            w.data.push_back({ 20, 680, 106, 198, 1225, SpawnChaser, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 13
         {
             StageWave w;
-            w.data.push_back({ 50, 450, 8, 100, 600, SpawnChaser, 5 });
-            w.data.push_back({ 30, 450, 7, 100, 600, SpawnSideShooter, 5 });
-            w.data.push_back({ 25, 450, 7, 100, 600, SpawnRadialShooter, 5 });
-            w.data.push_back({ 20, 450, 7, 100, 600, SpawnCrossShooter, 5 });
-            w.data.push_back({ 20, 450, 7, 100, 600, SpawnTrackerX, 5 });
-            w.data.push_back({ 20, 450, 8, 100, 600, SpawnChaser, 5 });
+            w.data.push_back({ 55, 660, 118, 196, 1200, SpawnChaser, 5 });
+            w.data.push_back({ 35, 660, 118, 196, 1200, SpawnSideShooter, 5 });
+            w.data.push_back({ 30, 660, 118, 196, 1200, SpawnRadialShooter, 5 });
+            w.data.push_back({ 25, 660, 118, 196, 1200, SpawnCrossShooter, 5 });
+            w.data.push_back({ 20, 660, 118, 196, 1200, SpawnTrackerX, 5 });
+            w.data.push_back({ 20, 660, 118, 196, 1200, SpawnChaser, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 14
         {
             StageWave w;
-            w.data.push_back({ 55, 450, 9, 90, 550, SpawnChaser, 5 });
-            w.data.push_back({ 35, 450, 8, 90, 550, SpawnRadialShooter, 5 });
-            w.data.push_back({ 30, 450, 8, 90, 550, SpawnCrossShooter, 5 });
-            w.data.push_back({ 25, 450, 8, 90, 550, SpawnSideShooter, 5 });
-            w.data.push_back({ 20, 450, 8, 90, 550, SpawnTrackerX, 5 });
-            w.data.push_back({ 20, 450, 9, 90, 550, SpawnChaser, 5 });
+            w.data.push_back({ 55, 640, 130, 194, 1175, SpawnChaser, 5 });
+            w.data.push_back({ 35, 640, 130, 194, 1175, SpawnRadialShooter, 5 });
+            w.data.push_back({ 30, 640, 130, 194, 1175, SpawnCrossShooter, 5 });
+            w.data.push_back({ 25, 640, 130, 194, 1175, SpawnSideShooter, 5 });
+            w.data.push_back({ 20, 640, 130, 194, 1175, SpawnTrackerX, 5 });
+            w.data.push_back({ 20, 640, 130, 194, 1175, SpawnChaser, 5 });
             state.stageData.waves.push_back(w);
         }
 
         // Wave 15
         {
             StageWave w;
-            w.data.push_back({ 60, 400, 10, 80, 500, SpawnChaser, 5 });
-            w.data.push_back({ 40, 400, 9, 80, 500, SpawnCrossShooter, 5 });
-            w.data.push_back({ 35, 400, 9, 80, 500, SpawnRadialShooter, 5 });
-            w.data.push_back({ 30, 400, 9, 80, 500, SpawnSideShooter, 5 });
-            w.data.push_back({ 25, 400, 9, 80, 500, SpawnTrackerX, 5 });
-            w.data.push_back({ 20, 400, 9, 80, 500, SpawnShooter, 5 });
+            w.data.push_back({ 60, 620, 142, 192, 1150, SpawnChaser, 5 });
+            w.data.push_back({ 40, 620, 142, 192, 1150, SpawnCrossShooter, 5 });
+            w.data.push_back({ 35, 620, 142, 192, 1150, SpawnRadialShooter, 5 });
+            w.data.push_back({ 30, 620, 142, 192, 1150, SpawnSideShooter, 5 });
+            w.data.push_back({ 25, 620, 142, 192, 1150, SpawnTrackerX, 5 });
+            w.data.push_back({ 20, 620, 142, 192, 1150, SpawnShooter, 5 });
             state.stageData.waves.push_back(w);
         }
     }
@@ -193,6 +193,7 @@ void StageUpdate(GameState& state) {
             sd.isEndless = true;
             sd.endlessStartTime = state.curTime;
             sd.lastEndlessSpawnTime = state.curTime;
+            SOUND->PlayBGM("Stage15+");
         }
     }
 
@@ -278,6 +279,10 @@ void StageUpdate(GameState& state) {
             else if (sd.curWave == 7) {
                 SOUND->PlayBGM("Stage7+");
             }
+            else if (sd.curWave == 10) {
+                SOUND->PlayBGM("Stage10+");
+            }
+ 
 
             sd.curWaveEnemyDataNumber = 0;
             sd.enemiesRemaining = 0;

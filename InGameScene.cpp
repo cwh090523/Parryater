@@ -24,7 +24,7 @@ void InGameInit(GameState& state) {
     state.inGameData.bullets.clear();
     state.inGameData.player.stats.maxHp = 5;
     state.inGameData.player.stats.hp = 5;
-    state.inGameData.player.stats.attackPower = 1;
+    state.inGameData.player.stats.attackPower = 5;
     state.inGameData.player.stats.attackSpeed = 500;
     state.inGameData.player.pos = { 55, 35 };
     state.inGameData.player.floatPos = { 55.0f, 35.0f };
@@ -66,7 +66,7 @@ void InGameCollision(GameState& state) {
                     enemy->stats.hp -= player.stats.attackPower;
                     if (enemy->stats.hp <= 0) {
                         enemy->isAlive = false;
-                        state.inGameData.score += 100;
+                        state.inGameData.score += 50;
                         
                     }
                     break;
@@ -134,19 +134,30 @@ void InGameCollision(GameState& state) {
 
         if (maxEnemyX >= minPlayerX && minEnemyX <= maxPlayerX &&
             maxEnemyY >= minPlayerY && minEnemyY <= maxPlayerY) {
-
             if (player.IsDashing(state.curTime)) {
+
+                Enemy* e = const_cast<Enemy*>(enemy.get());
+
+                if (state.curTime - e->lastHitTime < 300)
+                    continue;
+
+                e->lastHitTime = state.curTime;
+
                 ShakeConsoleWindow(10, 20, 10);
+
                 player.invisibleEndTime = state.curTime + 1000;
                 player.dashCooldownEndTime = state.curTime;
+
                 auto wave = new WaveDeco(state, Color::WHITE, 50, player.pos, 2, 0);
                 state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
 
                 state.inGameData.score += 25;
                 SOUND->PlaySFX("ParrySFX");
-                const_cast<Enemy*>(enemy.get())->stats.hp -= (player.stats.attackPower * 3);
-                if (enemy->stats.hp <= 0) {
-                    const_cast<Enemy*>(enemy.get())->isAlive = false;
+
+                e->stats.hp -= (player.stats.attackPower * 2);
+
+                if (e->stats.hp <= 0) {
+                    e->isAlive = false;
                     state.inGameData.score += 50;
                 }
             }

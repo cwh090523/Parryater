@@ -25,22 +25,41 @@ struct ShopItem
 
 const ShopItem shopItems[] =
 {
-    { "HP UP              " ,"Max HP +1           ",        300, ShopItemType::MAX_HP,        1 },
-    { "ATTACK UP          " ,"Attack Power +1     ",        500, ShopItemType::ATTACK_POWER,  1 },
-    { "ATTACK SPEED UP     ","Attack Cooldown -25 ",        400, ShopItemType::ATTACK_SPEED, 25 },
-    { "MOVE SPEED UP      " ,"Move Speed +5      ",        350, ShopItemType::MOVE_SPEED,   5 },
-    { "DASH COOL DOWN      ","Dash Cooldown -100  ",        450, ShopItemType::DASH_COOLDOWN,100}
+    { "HP UP              " ,"Max HP +1           ", 300, ShopItemType::MAX_HP,        1 },
+    { "ATTACK UP          " ,"Attack Power +1     ", 500, ShopItemType::ATTACK_POWER,  1 },
+    { "ATTACK SPEED UP    " ,"Attack Cooldown -25 ", 400, ShopItemType::ATTACK_SPEED, 25 },
+    { "MOVE SPEED UP      " ,"Move Speed +5       ", 350, ShopItemType::MOVE_SPEED,   5 },
+    { "DASH COOL DOWN     " ,"Dash Cooldown -100  ", 450, ShopItemType::DASH_COOLDOWN,100}
 };
 
 const int SHOP_ITEM_COUNT = sizeof(shopItems) / sizeof(shopItems[0]);
+
+bool CanBuy(const Player& player, const ShopItem& item)
+{
+    switch (item.type)
+    {
+    case ShopItemType::MAX_HP:        return player.stats.maxHp < 50;
+    case ShopItemType::ATTACK_POWER:  return player.stats.attackPower < 20;
+    case ShopItemType::ATTACK_SPEED:  return player.stats.attackSpeed > 100;
+    case ShopItemType::MOVE_SPEED:    return player.stats.MoveSpeed < 400;
+    case ShopItemType::DASH_COOLDOWN: return player.stats.DashCooldown > 300;
+    }
+    return true;
+}
 
 void BuyShopItem(GameState& state, const ShopItem& item)
 {
     Player& player = state.inGameData.player;
 
+    if (!CanBuy(player, item))
+    {
+        state.shopData.message = "이미 최대치";
+        return;
+    }
+
     if (state.inGameData.score < item.price)
     {
-        state.shopData.message = "돈이 충분하지 않다!";
+        state.shopData.message = "돈 부족";
         return;
     }
 
@@ -50,10 +69,9 @@ void BuyShopItem(GameState& state, const ShopItem& item)
     {
     case ShopItemType::MAX_HP:
         player.stats.maxHp += item.value;
-        player.stats.hp += item.value + 1;
-        if (player.stats.hp > player.stats.maxHp) {
+        player.stats.hp += item.value;
+        if (player.stats.hp > player.stats.maxHp)
             player.stats.hp = player.stats.maxHp;
-        }
         break;
 
     case ShopItemType::ATTACK_POWER:
@@ -62,7 +80,6 @@ void BuyShopItem(GameState& state, const ShopItem& item)
 
     case ShopItemType::ATTACK_SPEED:
         player.stats.attackSpeed -= item.value;
-
         if (player.stats.attackSpeed < 100)
             player.stats.attackSpeed = 100;
         break;
@@ -73,27 +90,23 @@ void BuyShopItem(GameState& state, const ShopItem& item)
 
     case ShopItemType::DASH_COOLDOWN:
         player.stats.DashCooldown -= item.value;
-
         if (player.stats.DashCooldown < 300)
             player.stats.DashCooldown = 300;
         break;
     }
 
-    state.shopData.message = "구매함: " + item.name;
+    state.shopData.message = "구매: " + item.name;
 }
 
 void ShopInit(GameState& state)
 {
     system("cls");
-
     state.shopData.selectedIndex = 0;
-    //state.shopData.message = "LEFT / RIGHT : Select, ENTER / SPACE : Buy, ESC : Back";
 }
 
 void ShopUpdate(GameState& state)
 {
     ShopData& shop = state.shopData;
-       
 
     if (GetKeyDown(VK_ESCAPE))
     {
@@ -104,7 +117,6 @@ void ShopUpdate(GameState& state)
     if (GetKeyDown(VK_LEFT))
     {
         shop.selectedIndex--;
-
         if (shop.selectedIndex < 0)
             shop.selectedIndex = SHOP_ITEM_COUNT - 1;
     }
@@ -112,7 +124,6 @@ void ShopUpdate(GameState& state)
     if (GetKeyDown(VK_RIGHT))
     {
         shop.selectedIndex++;
-
         if (shop.selectedIndex >= SHOP_ITEM_COUNT)
             shop.selectedIndex = 0;
     }
@@ -123,12 +134,14 @@ void ShopUpdate(GameState& state)
     }
 }
 
-void DrawShopCard(int x, int y, const ShopItem& item, bool selected)
+void DrawShopCard(int x, int y, const ShopItem& item, bool selected, const Player& player)
 {
+    bool canBuy = CanBuy(player, item);
+
     if (selected)
-        SetColor(Color::BLACK, Color::LIGHT_YELLOW);
+        SetColor(Color::BLACK,Color::LIGHT_YELLOW);
     else
-        SetColor(Color::WHITE, Color::BLACK);
+        SetColor(Color::WHITE ,Color::BLACK);
 
     GotoXY(x, y);
     cout << "======================";
@@ -138,18 +151,19 @@ void DrawShopCard(int x, int y, const ShopItem& item, bool selected)
 
     GotoXY(x, y + 2);
     cout << "| " << item.name;
-
     GotoXY(x + 21, y + 2);
     cout << "|";
 
     GotoXY(x, y + 3);
     cout << "| " << item.desc;
-
     GotoXY(x + 21, y + 3);
     cout << "|";
 
     GotoXY(x, y + 4);
-    cout << "| 가격: " << item.price << "          ";
+    if (canBuy)
+        cout << "| 가격: " << item.price << "          ";
+    else
+        cout << "|  MAXED             ";
 
     GotoXY(x + 21, y + 4);
     cout << "|";
@@ -189,13 +203,16 @@ void ShopRender(const GameState& state)
     GotoXY(62, 3);
     cout << "Move Speed : " << player.stats.MoveSpeed;
 
+    GotoXY(85, 3);
+    cout << "Dash CD : " << player.stats.DashCooldown;
+
     int startX = 5;
     int y = 7;
     int gap = 24;
 
     for (int i = 0; i < SHOP_ITEM_COUNT; ++i)
     {
-        DrawShopCard(startX + i * gap, y, shopItems[i], i == shop.selectedIndex);
+        DrawShopCard(startX + i * gap, y, shopItems[i], i == shop.selectedIndex, player);
     }
 
     GotoXY(5, 17);

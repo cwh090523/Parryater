@@ -36,6 +36,7 @@ struct Stats {
 
 class Player {
 public:
+    ULONGLONG lastDashHitTime = 0;
     ULONGLONG dashStartTime = 0;
     ULONGLONG dashEndTime = 0;
     ULONGLONG dashCooldownEndTime = 0;
@@ -112,6 +113,7 @@ public:
     }
     virtual ~Enemy() {}
     int hp = 10;
+    ULONGLONG lastHitTime = 0;
     ULONGLONG lastMoveTime = 0;
     Position prevPos = { 0,0 };
     Position pos = { 0,0 };

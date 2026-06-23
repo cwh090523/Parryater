@@ -16,7 +16,7 @@ void InitTitle(GameState& state)
 	SOUND->Load("Stage4+", "Stage4+.mp3");
 	SOUND->Load("Stage7+", "Stage7+.mp3");
 	SOUND->Load("Stage10+", "Stage10+.mp3");
-	SOUND->Load("Stage15+", "Stage15+ (2).mp3");
+	SOUND->Load("Stage15+", "Stage15+.mp3");
 	SOUND->Load("ParrySFX", "damage3.wav");
 	SOUND->Load("HitSFX", "damage5.wav");
 	SOUND->PlayBGM("TitleBGM");
