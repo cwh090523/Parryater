@@ -75,11 +75,11 @@ int main()
 
 			InGameAfterUpdate(state);
 			break;
-		case Scene::SHOP: // 완벽 미구현
+		case Scene::SHOP:
 			ShopUpdate(state);
 			ShopRender(state);
 			break;
-		case Scene::GAMEOVER:// 완벽 미구현
+		case Scene::GAMEOVER:
 			GameOverUpdate(state);
 			GameOverRender(state);
 			break;

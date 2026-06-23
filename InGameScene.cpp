@@ -12,7 +12,6 @@ using namespace std;
 void InGameInit(GameState& state) {
     
     system("cls");
-
     state.inGameData.isPaused = false;
     state.inGameData.isGameOver = false;
     state.inGameData.score = 0;
@@ -107,7 +106,10 @@ void InGameCollision(GameState& state) {
                     player.invisibleEndTime = state.curTime + 500;
                     ShakeConsoleWindow(5, 50, 25);
                     SOUND->PlaySFX("HitSFX");
-                    if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
+                    if (player.stats.hp <= 0) {
+                        state.curScene = Scene::TITLE;
+                        state.inGameData.isGameOver = true;
+                    }
                 }
             }
         }
@@ -153,10 +155,13 @@ void InGameCollision(GameState& state) {
                 //system("cls");
                 ShakeConsoleWindow(50, 50, 10);
 
-                SetColor();
-                system("cls");
+                //SetColor();
+                //system("cls");
                 SOUND->PlaySFX("HitSFX");
-                if (player.stats.hp <= 0) state.inGameData.isGameOver = true;
+                if (player.stats.hp <= 0) {
+                    state.curScene = Scene::TITLE;
+                    state.inGameData.isGameOver = true;
+                }
             }
         }
     }
@@ -327,6 +332,7 @@ void InGameRender(const GameState& state) {
             GotoXY(enemy->pos.x, enemy->pos.y);
             if (dynamic_cast<EnemyShooter*>(enemy.get()))     SetColor(Color::SKYBLUE);
             else if (dynamic_cast<EnemyZigzag*>(enemy.get())) SetColor(Color::YELLOW);
+            else if (dynamic_cast<EnemyWaver*>(enemy.get())) SetColor(Color::BLUE);
             else                                              SetColor(Color::RED);
             wcout << L"▼";
         }

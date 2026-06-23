@@ -12,8 +12,8 @@
 constexpr int WIDTH = 160;
 constexpr int HEIGHT = 45;
 
-constexpr int GAME_WIDTH = 110;
-constexpr int UI_X = 113;
+constexpr int GAME_WIDTH = 80;
+constexpr int UI_X = 83;
 
 
 struct TitleData

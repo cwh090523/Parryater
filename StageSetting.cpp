@@ -14,7 +14,7 @@ void StageInit(GameState& state) {
         3,             // enemyHp
         200,           // enemyMoveSpeed
         1000,          // enemyAttackSpeed
-        SpawnShooter,    // 함수 포인터
+        SpawnWaver,    // 함수 포인터
         5, //spawncount
         });
     wave1.data.push_back(WaveEnemyData{

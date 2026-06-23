@@ -123,6 +123,15 @@ public:
     void EnemyUpdate(GameState& state) override;
 };
 
+class EnemyWaver : public Enemy {
+public:
+    EnemyWaver(Stats astat, Position apos);
+    ~EnemyWaver() {}
+    ULONGLONG lastAttackTime = 0;
+    int moveXdir = 0;
+    bool isAwakend = false;
+    void EnemyUpdate(GameState& state) override;
+};
 class EnemyZigzag : public Enemy {
 public:
     EnemyZigzag(Stats astat, Position apos);
