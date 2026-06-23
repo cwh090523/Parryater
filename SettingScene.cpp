@@ -78,7 +78,7 @@ void SettingUpdate(GameState& state)
 			{
 				if (GetKeyDown(key))
 				{
-					if (key == VK_UP || key == VK_DOWN || key == VK_ESCAPE)
+					if (key == VK_UP || key == VK_DOWN || key == VK_ESCAPE || key == 'b' || key == 'B')
 						break;
 
 					ChangeControlKey(setting, key);
@@ -140,7 +140,7 @@ void SettingRender(const GameState& state)
 
 	if (setting.isSelected && setting.curMenu == SettingsMenu::VOLUME)
 	{
-		GotoXY(cx, cy+ 1);
+		GotoXY(cx, cy + 1);
 		cout << (setting.selectIndex == 0 ? "> " : "  ");
 		cout << "BGM : " << (int)(setting.bgmVolume * 100) << "%  ";
 
@@ -205,7 +205,7 @@ void SettingRender(const GameState& state)
 
 	for (int i = 0; i < 4; ++i)
 	{
-		GotoXY(cx, cy + i+1);
+		GotoXY(cx, cy + i + 1);
 		cout << (i == (int)setting.curMenu ? "> " : "  ");
 		cout << labels[i];
 	}

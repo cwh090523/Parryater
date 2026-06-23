@@ -94,10 +94,9 @@ void ShopUpdate(GameState& state)
 
     if (GetKeyDown(VK_ESCAPE))
     {
-        state.curScene = Scene::INGAME;
+        state.curScene = state.shopData.returnScene;
         return;
     }
-
     if (GetKeyDown(VK_LEFT))
     {
         shop.selectedIndex--;
@@ -165,14 +164,14 @@ void ShopRender(const GameState& state)
     const ShopData& shop = state.shopData;
     const Player& player = state.inGameData.player;
 
-    GotoXY(0, 0);
+    GotoXY(15 , 0);
 
     SetColor(Color::LIGHT_YELLOW);
-    cout << "============================== SHOP ==============================";
+    cout << "============================== 현재 씬은 상점 씬입니다. 씬에서 나가는 방법은 ESC키를 누르면 됩니다. ==============================";
     SetColor();
 
     GotoXY(3, 2);
-    cout << "Score : " << state.inGameData.score;
+    cout << "Score : " << state.inGameData.score << "               ";
 
     GotoXY(3, 3);
     cout << "HP : " << player.stats.hp << " / " << player.stats.maxHp;

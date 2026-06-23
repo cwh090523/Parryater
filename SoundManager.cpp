@@ -130,4 +130,6 @@ void SoundManager::SetBGMVolume(float volume)
 void SoundManager::SetSFXVolume(float volume)
 {
     m_sfxVolume = std::max(0.0f, std::min(1.0f, volume));
+    if (m_sfxCh != nullptr)
+        m_sfxCh->setVolume(m_sfxVolume);
 }
