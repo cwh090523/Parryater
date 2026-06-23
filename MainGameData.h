@@ -48,6 +48,7 @@ public:
     FloatPosition floatPos = { 0,0 };
     ULONGLONG lastAttackTime = 0;
     ULONGLONG lastMoveTime = 0;
+    bool dashReadyTriggered = false;
     void PlayerUpdate();
 
     bool IsDashing(ULONGLONG curTime) const {
@@ -86,6 +87,18 @@ public:
     Position dirs;
     void DecoUpdate(GameState& state) override;
     
+};
+
+class TrailDeco : public DecoObject {
+public:
+    TrailDeco(GameState& state, Color color, int lifeTime, Position position, const string& text = ".");
+
+    virtual ~TrailDeco() {}
+
+    ULONGLONG startTime;
+    ULONGLONG disableTime;
+
+    void DecoUpdate(GameState& state) override;
 };
 class Enemy {
 public:
@@ -167,4 +180,51 @@ public:
     ULONGLONG spawnTime = 0;
     ULONGLONG lastMoveTime = 0;
     void ProjectileUpdate(GameState& state);
+};
+class EnemySideShooter : public Enemy {
+public:
+    EnemySideShooter(Stats astat, Position apos);
+    ~EnemySideShooter() {}
+
+    ULONGLONG lastAttackTime = 0;
+    bool shootLeft = true;
+
+    void EnemyUpdate(GameState& state) override;
+};
+
+class EnemyCrossShooter : public Enemy {
+public:
+    EnemyCrossShooter(Stats astat, Position apos);
+    ~EnemyCrossShooter() {}
+
+    ULONGLONG lastAttackTime = 0;
+    int moveDirX = 1;
+
+    void EnemyUpdate(GameState& state) override;
+};
+
+class EnemyRadialShooter : public Enemy {
+public:
+    EnemyRadialShooter(Stats astat, Position apos);
+    ~EnemyRadialShooter() {}
+
+    ULONGLONG lastAttackTime = 0;
+
+    void EnemyUpdate(GameState& state) override;
+};
+
+class EnemyTrackerX : public Enemy {
+public:
+    EnemyTrackerX(Stats astat, Position apos);
+    ~EnemyTrackerX() {}
+
+    void EnemyUpdate(GameState& state) override;
+};
+
+class EnemyChaser : public Enemy {
+public:
+    EnemyChaser(Stats astat, Position apos);
+    ~EnemyChaser() {}
+
+    void EnemyUpdate(GameState& state) override;
 };

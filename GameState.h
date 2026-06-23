@@ -61,6 +61,9 @@ struct StageData {
     int enemiesRemaining = 0;
     ULONGLONG lastSpawnTime = 0;
     vector<StageWave> waves;
+    bool isEndless = false;
+    ULONGLONG endlessStartTime = 0;
+    ULONGLONG lastEndlessSpawnTime = 0;
 };
 struct GameState
 {

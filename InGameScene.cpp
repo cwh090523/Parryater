@@ -12,23 +12,25 @@ using namespace std;
 void InGameInit(GameState& state) {
     
     system("cls");
+    if (!state.inGameData.isGamming) {
+
+    StageInit(state);
+    SOUND->PlayBGM("Stage0+");
     state.inGameData.isPaused = false;
     state.inGameData.isGameOver = false;
     state.inGameData.score = 0;
 
     state.inGameData.enemies.clear();
     state.inGameData.bullets.clear();
-    SOUND->PlayBGM("Stage0+");
-    if (!state.inGameData.isGamming) {
-
-    state.inGameData.player.stats.maxHp = 10;
-    state.inGameData.player.stats.hp = 10;
+    state.inGameData.player.stats.maxHp = 5;
+    state.inGameData.player.stats.hp = 5;
     state.inGameData.player.stats.attackPower = 1;
-    state.inGameData.player.stats.attackSpeed = 200;
+    state.inGameData.player.stats.attackSpeed = 500;
     state.inGameData.player.pos = { 55, 35 };
     state.inGameData.player.floatPos = { 55.0f, 35.0f };
     state.inGameData.player.prevPos = { 55, 35 };
-    state.inGameData.player.stats.MoveSpeed = 50;
+    state.inGameData.player.stats.MoveSpeed = 40;
+    state.inGameData.player.stats.DashCooldown = 2000;
     state.inGameData.player.lastMoveTime = state.curTime;
     state.inGameData.player.lastAttackTime = state.curTime;
     state.inGameData.player.invisibleEndTime = 0;
@@ -36,7 +38,6 @@ void InGameInit(GameState& state) {
 
     }
 
-    StageInit(state);
 }
 
 void InGameCollision(GameState& state) {
@@ -87,7 +88,7 @@ void InGameCollision(GameState& state) {
 
             if (maxBulletX >= minPlayerX && minBulletX <= maxPlayerX && maxBulletY >= minPlayerY && minBulletY <= maxPlayerY) {
                 if (player.IsDashing(state.curTime)) {
-                    ShakeConsoleWindow(15, 45, 15);
+                    ShakeConsoleWindow(10, 20, 10);
                     bullet.moveDir.x *=-1;
                     bullet.moveDir.y *=-1;
                     bullet.type = ProjectileType::Player;
@@ -95,7 +96,7 @@ void InGameCollision(GameState& state) {
                     bullet.MoveSpeed /= 2;
                     player.invisibleEndTime = state.curTime + 800;
                     player.dashCooldownEndTime = state.curTime;
-                    state.inGameData.score += 200;
+                    state.inGameData.score += 20;
                     auto wave = new WaveDeco(state, Color::WHITE, 50, player.pos, 2, 0);
                     state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
                     SOUND->PlaySFX("ParrySFX");
@@ -104,11 +105,12 @@ void InGameCollision(GameState& state) {
                 bullet.isActive = false;
                     player.stats.hp -= bullet.damage;
                     player.invisibleEndTime = state.curTime + 500;
-                    ShakeConsoleWindow(5, 50, 25);
+                    ShakeConsoleWindow(5, 10, 10);
                     SOUND->PlaySFX("HitSFX");
                     if (player.stats.hp <= 0) {
                         state.curScene = Scene::TITLE;
                         state.inGameData.isGameOver = true;
+                        state.inGameData.isGamming = false;
                     }
                 }
             }
@@ -134,18 +136,18 @@ void InGameCollision(GameState& state) {
             maxEnemyY >= minPlayerY && minEnemyY <= maxPlayerY) {
 
             if (player.IsDashing(state.curTime)) {
-                ShakeConsoleWindow(50, 30, 10);
+                ShakeConsoleWindow(10, 20, 10);
                 player.invisibleEndTime = state.curTime + 1000;
                 player.dashCooldownEndTime = state.curTime;
                 auto wave = new WaveDeco(state, Color::WHITE, 50, player.pos, 2, 0);
                 state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
 
-                state.inGameData.score += 300;
+                state.inGameData.score += 25;
                 SOUND->PlaySFX("ParrySFX");
                 const_cast<Enemy*>(enemy.get())->stats.hp -= (player.stats.attackPower * 3);
                 if (enemy->stats.hp <= 0) {
                     const_cast<Enemy*>(enemy.get())->isAlive = false;
-                    state.inGameData.score += 100;
+                    state.inGameData.score += 50;
                 }
             }
             else if (!playerInvincible) {
@@ -153,7 +155,7 @@ void InGameCollision(GameState& state) {
                 player.invisibleEndTime = state.curTime + 500;
                 //SetColor(Color::WHITE, Color::LIGHT_RED);
                 //system("cls");
-                ShakeConsoleWindow(50, 50, 10);
+                ShakeConsoleWindow(5, 10, 10);
 
                 //SetColor();
                 //system("cls");
@@ -161,6 +163,7 @@ void InGameCollision(GameState& state) {
                 if (player.stats.hp <= 0) {
                     state.curScene = Scene::TITLE;
                     state.inGameData.isGameOver = true;
+                    state.inGameData.isGamming = false;
                 }
             }
         }
@@ -184,7 +187,25 @@ void InGameUpdate(GameState& state) {
 
     Player& player = state.inGameData.player;
     MovementSettingData& msd = state.settingData.movementSettingData;
+    if (player.CanDash(state.curTime)) {
+        if (!player.dashReadyTriggered) {
+            player.dashReadyTriggered = true;
 
+            auto wave = new WaveDeco(
+                state,
+                Color::LIGHT_YELLOW,
+                40,
+                player.pos,
+                2,
+                0
+            );
+
+            state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(wave));
+        }
+    }
+    else {
+        player.dashReadyTriggered = false;
+    }
     player.lastMoveDir = player.moveDir;
     player.moveDir = { 0, 0 };
 
@@ -273,49 +294,56 @@ void InGameUpdate(GameState& state) {
         }
         state.inGameData.decoSpawnQueue.clear();
     }
-}
+    if (player.IsDashing(state.curTime)) {
+        auto trail = new TrailDeco(
+            state,
+            Color::GRAY,
+            120,
+            player.prevPos,
+            "."
+        );
 
-void InGameRender(const GameState& state) {
+        state.inGameData.decoObject.push_back(std::unique_ptr<DecoObject>(trail));
+    }
+}void InGameRender(const GameState& state) {
     const Player& player = state.inGameData.player;
-
     RenderBorder();
     RenderUI(state);
-
     SetUnicodeMode();
 
-
-    for (const auto& deco : state.inGameData.enemies) {
-        GotoXY(deco->prevPos.x, deco->prevPos.y);
-        wcout << L"  ";
-    }
-
     for (const auto& enemy : state.inGameData.enemies) {
+        if (enemy->prevPos == enemy->pos) continue;
         GotoXY(enemy->prevPos.x, enemy->prevPos.y);
         wcout << L"  ";
     }
     for (const Bullet& bullet : state.inGameData.bullets) {
+        if (bullet.prevPos == bullet.pos) continue;
         GotoXY(bullet.prevPos.x, bullet.prevPos.y);
         wcout << L"  ";
     }
-    GotoXY(player.prevPos.x, player.prevPos.y);
-    wcout << L" ";
+    if (!(player.prevPos == player.pos)) {
+        GotoXY(player.prevPos.x, player.prevPos.y);
+        wcout << L" ";
+    }
     for (const auto& deco : state.inGameData.decoObject) {
         if (!deco->isActive) continue;
+        if (deco->prevPos == deco->pos) continue;
         if (deco->prevPos.x >= 0 && deco->prevPos.x < GAME_WIDTH &&
             deco->prevPos.y >= 0 && deco->prevPos.y < HEIGHT) {
             GotoXY(deco->prevPos.x, deco->prevPos.y);
             wcout << L"  ";
         }
     }
-
     for (const auto& enemy : state.inGameData.enemies) {
         if (!enemy->isAlive) continue;
+        if (enemy->prevPos == enemy->pos) continue;
         if (enemy->prevPos.x >= 0 && enemy->prevPos.x < GAME_WIDTH &&
             enemy->prevPos.y >= 0 && enemy->prevPos.y < HEIGHT) {
             GotoXY(enemy->prevPos.x, enemy->prevPos.y);
             wcout << L"  ";
         }
     }
+
     for (const auto& deco : state.inGameData.decoObject) {
         if (!deco->isActive) continue;
         if (deco->pos.x >= 0 && deco->pos.x < GAME_WIDTH &&
@@ -327,14 +355,48 @@ void InGameRender(const GameState& state) {
     }
     for (const auto& enemy : state.inGameData.enemies) {
         if (!enemy->isAlive) continue;
+
         if (enemy->pos.x >= 0 && enemy->pos.x < GAME_WIDTH &&
             enemy->pos.y >= 0 && enemy->pos.y < HEIGHT) {
+
             GotoXY(enemy->pos.x, enemy->pos.y);
-            if (dynamic_cast<EnemyShooter*>(enemy.get()))     SetColor(Color::SKYBLUE);
-            else if (dynamic_cast<EnemyZigzag*>(enemy.get())) SetColor(Color::YELLOW);
-            else if (dynamic_cast<EnemyWaver*>(enemy.get())) SetColor(Color::BLUE);
-            else                                              SetColor(Color::RED);
-            wcout << L"▼";
+
+            if (dynamic_cast<EnemyShooter*>(enemy.get())) {
+                SetColor(Color::SKYBLUE);
+                wcout << L"▼";
+            }
+            else if (dynamic_cast<EnemyZigzag*>(enemy.get())) {
+                SetColor(Color::YELLOW);
+                wcout << L"▼";
+            }
+            else if (dynamic_cast<EnemyWaver*>(enemy.get())) {
+                SetColor(Color::CYAN);
+                wcout << L"◆";
+            }
+            else if (dynamic_cast<EnemySideShooter*>(enemy.get())) {
+                SetColor(Color::LIGHT_GREEN);
+                wcout << L"◆";
+            }
+            else if (dynamic_cast<EnemyCrossShooter*>(enemy.get())) {
+                SetColor(Color::LIGHT_VIOLET);
+                wcout << L"✚";
+            }
+            else if (dynamic_cast<EnemyRadialShooter*>(enemy.get())) {
+                SetColor(Color::LIGHT_RED);
+                wcout << L"◆";
+            }
+            else if (dynamic_cast<EnemyTrackerX*>(enemy.get())) {
+                SetColor(Color::LIGHT_BLUE);
+                wcout << L"■";
+            }
+            else if (dynamic_cast<EnemyChaser*>(enemy.get())) {
+                SetColor(Color::LIGHT_YELLOW);
+                wcout << L"★";
+            }
+            else {
+                SetColor(Color::RED);
+                wcout << L"▼";
+            }
         }
     }
     for (const Bullet& bullet : state.inGameData.bullets) {
@@ -345,12 +407,11 @@ void InGameRender(const GameState& state) {
             SetColor();
         }
     }
-
     if (player.IsDashing(state.curTime)) {
         SetColor(Color::WHITE);
     }
-    else if (player.invisibleEndTime > state.curTime) {
-        SetColor(Color::GRAY);
+    else if (!player.CanDash(state.curTime)) {
+        SetColor(Color::LIGHT_GRAY);
     }
     else {
         SetColor(Color::LIGHT_GREEN);
@@ -377,7 +438,7 @@ void DashPlayer(GameState& state) {
     if (!player.CanDash(state.curTime)) return;
 
     player.dashStartTime = state.curTime;
-    player.dashEndTime = state.curTime + 200;
+    player.dashEndTime = state.curTime + 230;
     player.dashCooldownEndTime = state.curTime + player.stats.DashCooldown;
 }
 
@@ -450,6 +511,10 @@ void RenderUI(const GameState& state) {
     cout << "SPD : " << (int)player.stats.MoveSpeed;
     GotoXY(UI_X, 17);
     cout << "DASH: " << (player.CanDash(state.curTime) ? "READY" : "COOL ");
+    GotoXY(UI_X, 21);
+    cout << "SHOP: B KEY";
+    GotoXY(UI_X, 22);
+    cout << "SETTING: TAB KEY";
 
     SetColor();
 }

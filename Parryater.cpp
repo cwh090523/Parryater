@@ -33,7 +33,7 @@ int main()
 	while (state.isRunning)
 	{
 
-		FrameSync(100);
+		FrameSync(60);
 		state.curTime = GetTickCount64();
 		UpdateInput();
 		SOUND->Update();

@@ -25,10 +25,10 @@ struct ShopItem
 
 const ShopItem shopItems[] =
 {
-    { "HP UP              " ,"Max HP +5           ",        300, ShopItemType::MAX_HP,        5 },
+    { "HP UP              " ,"Max HP +1           ",        300, ShopItemType::MAX_HP,        1 },
     { "ATTACK UP          " ,"Attack Power +1     ",        500, ShopItemType::ATTACK_POWER,  1 },
-    { "ATTACK SPEED UP     ","Attack Cooldown -50 ",        400, ShopItemType::ATTACK_SPEED, 50 },
-    { "MOVE SPEED UP      " ,"Move Speed +10      ",        350, ShopItemType::MOVE_SPEED,   10 },
+    { "ATTACK SPEED UP     ","Attack Cooldown -25 ",        400, ShopItemType::ATTACK_SPEED, 25 },
+    { "MOVE SPEED UP      " ,"Move Speed +5      ",        350, ShopItemType::MOVE_SPEED,   5 },
     { "DASH COOL DOWN      ","Dash Cooldown -100  ",        450, ShopItemType::DASH_COOLDOWN,100}
 };
 
@@ -50,7 +50,10 @@ void BuyShopItem(GameState& state, const ShopItem& item)
     {
     case ShopItemType::MAX_HP:
         player.stats.maxHp += item.value;
-        player.stats.hp += item.value;
+        player.stats.hp += item.value + 1;
+        if (player.stats.hp > player.stats.maxHp) {
+            player.stats.hp = player.stats.maxHp;
+        }
         break;
 
     case ShopItemType::ATTACK_POWER:
